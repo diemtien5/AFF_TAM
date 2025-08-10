@@ -118,23 +118,26 @@ export default function HomePage() {
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center space-x-8">
-                <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                   Trang chủ
                 </a>
-                {navbarLinks.map((link) => (
-                  <a
-                    key={link.id}
-                    href={link.url}
-                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                  >
-                    {link.title}
-                  </a>
-                ))}
+                <a href="/dashboard?tab=muadee" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                  Thẻ Muadee
+                </a>
+                <a href="/dashboard?tab=tnex" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                  Vay Tnex
+                </a>
+                <a href="/dashboard?tab=fe" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                  Vay FE
+                </a>
+                <a href="/dashboard?tab=cub" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                  Vay CUB
+                </a>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowAdminModal(true)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 opacity-60"
                 >
                   Admin
                 </Button>
@@ -144,142 +147,157 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Hero Section - Main Title */}
-      <section className="py-8 md:py-12 px-4 bg-gradient-to-br from-blue-600/5 via-cyan-50/30 to-blue-100/20">
+      {/* Simple Header */}
+      <section className="py-8 px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="relative">
-            {/* Background decoration */}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-cyan-600/10 rounded-3xl blur-3xl"></div>
-
-            {/* Main title */}
-            <div className="relative z-10 space-y-4">
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-800 leading-tight">
-                💳 GIỚI THIỆU SẢN PHẨM
-                <br />
-                <span className="text-2xl md:text-4xl lg:text-5xl">THẺ TÍN DỤNG & KHOẢN VAY TIÊU DÙNG</span>
-              </h1>
-
-              <div className="flex items-center justify-center space-x-8 text-sm text-slate-600">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span>Uy tín - Minh bạch</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <span>Tư vấn chuyên nghiệp</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  <span>Hỗ trợ 24/7</span>
-                </div>
-              </div>
-
-              {/* Trust indicators */}
-              <div className="flex items-center justify-center space-x-6 pt-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">87%</div>
-                  <div className="text-xs text-slate-500">Tỷ lệ duyệt</div>
-                </div>
-                <div className="w-px h-8 bg-slate-300"></div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">6,170+</div>
-                  <div className="text-xs text-slate-500">Khách hàng</div>
-                </div>
-                <div className="w-px h-8 bg-slate-300"></div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">24/7</div>
-                  <div className="text-xs text-slate-500">Hỗ trợ</div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Giới thiệu sản phẩm
+          </h1>
+          <p className="text-lg text-gray-600">
+            Thẻ tín dụng & khoản vay tiêu dùng
+          </p>
         </div>
       </section>
 
       {/* Page Introduction Section */}
       <section className="py-6 md:py-8 px-4">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="bg-gradient-to-br from-slate-50 to-blue-50/30 border border-slate-200/50 rounded-2xl p-8 shadow-sm">
-            <div className="space-y-6">
-              {/* Main Introduction with Avatar */}
-              <div className="flex items-start space-x-4">
-                {/* Consultant Avatar */}
-                {consultant && (
-                  <div className="flex-shrink-0">
-                    <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 shadow-md">
-                      {consultant.avatar ? (
-                        <Image
-                          src={consultant.avatar || "/placeholder.svg"}
-                          alt={consultant.name}
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-blue-100 flex items-center justify-center">
-                          <span className="text-blue-600 text-2xl">👤</span>
-                        </div>
-                      )}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Left Column - Personal Information */}
+              <div className="space-y-6">
+                {/* Personal Avatar and Info */}
+                <div className="relative">
+                  {/* Avatar - positioned at top left */}
+                  <div className="absolute top-0 left-0 w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-blue-100 to-cyan-100 shadow-lg">
+                    {consultant && consultant.avatar ? (
+                      <Image
+                        src={consultant.avatar}
+                        alt="PhucNguyen"
+                        width={64}
+                        height={64}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center">
+                        <span className="text-blue-600 text-2xl">👤</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Personal Details - with left margin to avoid overlap */}
+                  <div className="ml-20 space-y-2">
+                    <h3 className="text-lg font-bold text-slate-800">Nguyễn Thành Phúc</h3>
+                    <p className="text-sm text-slate-600 font-medium">Tư vấn tài chính</p>
+                    <div className="w-24 h-px bg-slate-300"></div>
+                  </div>
+                </div>
+
+                                {/* Services */}
+                <div className="space-y-4">
+                  <div className="space-y-3 text-sm text-slate-700">
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-500 mt-1">•</span>
+                      <span>Mở thẻ tín dụng: <span className="font-medium">VIB, VPBank, HD Bank, TPBank</span></span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-500 mt-1">•</span>
+                      <span>Cho vay tài chính tại <span className="font-medium">Lotte Finance</span></span>
+                    </div>
+                    <div className="flex items-start space-x-2">
+                      <span className="text-green-500 mt-1">•</span>
+                      <span>Rút ví trả sau: <span className="font-medium">Kredivo, Momo, Muadee</span></span>
                     </div>
                   </div>
-                )}
+                </div>
 
-                {/* Introduction Text */}
-                <div className="flex-1 text-sm text-slate-700 leading-relaxed">
-                  <p className="mb-4">
-                    Trang giới thiệu này được xây dựng và vận hành bởi{" "}
-                    <span className="font-semibold text-slate-800">PhucNguyen</span> – người trực tiếp chịu trách nhiệm
-                    tư vấn và phân phối các sản phẩm thẻ tín dụng và khoản vay tiêu dùng từ các công ty tài chính uy tín
-                    tại Việt Nam.
-                  </p>
+                {/* Contact Information & Action Buttons */}
+                <div className="space-y-4">
+                  <div className="text-center lg:text-left">
+                    <p className="text-sm text-slate-600 mb-4">Liên hệ ngay để được tư vấn:</p>
 
-                  <div className="mb-4">
-                    <p className="font-medium text-slate-800 mb-2">Mục đích:</p>
-                    <ul className="space-y-1 ml-4">
-                      <li className="flex items-start space-x-2">
-                        <span className="text-blue-500 mt-1">•</span>
-                        <span>Giới thiệu các sản phẩm phù hợp nhất với hồ sơ khách hàng</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <span className="text-blue-500 mt-1">•</span>
-                        <span>Hỗ trợ toàn bộ quy trình đăng ký vay hoặc mở thẻ một cách minh bạch, an toàn</span>
-                      </li>
-                      <li className="flex items-start space-x-2">
-                        <span className="text-blue-500 mt-1">•</span>
-                        <span>Tư vấn rõ ràng, trách nhiệm đến khi giải ngân thành công</span>
-                      </li>
-                    </ul>
+                                        {/* Contact Cards */}
+                    <div className="flex justify-center space-x-4">
+                      {/* Phone Card */}
+                      <div className="group">
+                        <Button
+                          className="w-48 h-12 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 hover:from-emerald-400 hover:via-green-400 hover:to-teal-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
+                          onClick={() => window.open("tel:0888979809", "_self")}
+                        >
+                          <div className="flex items-center justify-center space-x-2">
+                            <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                              <span className="text-sm">📞</span>
+                            </div>
+                            <span className="text-sm font-medium">0888.979.809</span>
+                          </div>
+                        </Button>
+                      </div>
+
+                      {/* Zalo Card */}
+                      <div className="group">
+                        <Button
+                          className="w-48 h-12 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-400 hover:via-indigo-400 hover:to-purple-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
+                          onClick={() => window.open("https://zalo.me/0888979809", "_blank")}
+                        >
+                          <div className="flex items-center justify-center space-x-2">
+                            <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                              <span className="text-sm">💬</span>
+                            </div>
+                            <span className="text-sm font-medium">0888.979.809</span>
+                          </div>
+                        </Button>
+                      </div>
+                    </div>
+
+                    {/* Additional Info */}
+                    <div className="mt-4 p-3 bg-blue-50/50 border border-blue-200/30 rounded-lg">
+                      <p className="text-xs text-slate-600 text-center">
+                        <span className="font-medium">💡</span> Hỗ trợ tư vấn miễn phí 24/7
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Contact Information */}
-              <div className="border-t border-slate-200 pt-6">
-                <div className="flex items-center space-x-2 mb-4">
-                  <Phone className="w-4 h-4 text-blue-600" />
-                  <h3 className="font-semibold text-slate-800 text-sm">Thông tin liên hệ chính thức:</h3>
+              {/* Right Column - Introduction and Purpose */}
+              <div className="space-y-6">
+                <div className="space-y-4">
+                  <h3 className="text-xl font-bold text-slate-800">
+                    Trang giới thiệu các sản phẩm thẻ tín dụng và khoản vay tiêu dùng từ bank & các công ty tài chính uy tín tại Việt Nam.
+                  </h3>
+
+                  <div className="space-y-4">
+                    <h4 className="text-lg font-semibold text-slate-800">Mục đích:</h4>
+                    <div className="space-y-3">
+                      <div className="flex items-start space-x-3">
+                        <span className="text-green-500 text-xl mt-0.5">✅</span>
+                        <span className="text-slate-700">Giới thiệu sản phẩm phù hợp hồ sơ</span>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="text-green-500 text-xl mt-0.5">✅</span>
+                        <span className="text-slate-700">Hỗ trợ quy trình đăng ký minh bạch</span>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="text-green-500 text-xl mt-0.5">✅</span>
+                        <span className="text-slate-700">Tư vấn rõ ràng, trách nhiệm</span>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="text-green-500 text-xl mt-0.5">✅</span>
+                        <span className="text-slate-700">Không thu phí trước & sau</span>
+                      </div>
+                      <div className="flex items-start space-x-3">
+                        <span className="text-green-500 text-xl mt-0.5">✅</span>
+                        <span className="text-slate-700">Hồ sơ trực tiếp hoặc online</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <p className="text-sm text-slate-600 mb-4">
-                  Tôi chỉ sử dụng duy nhất 2 kênh để tương tác và hỗ trợ khách hàng mở thẻ và lên hồ sơ:
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Button
-                    className="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white border-0 px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-200"
-                    onClick={() => window.open("tel:0888979809", "_self")}
-                  >
-                    <Phone className="w-4 h-4" />
-                    <span className="font-medium">0888.979.809</span>
-                  </Button>
-
-                  <Button
-                    className="flex items-center justify-center space-x-2 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white border-0 px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all duration-200"
-                    onClick={() => window.open("https://zalo.me/0888979809", "_blank")}
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                    <span className="font-medium">Zalo: 0888.979.809</span>
-                  </Button>
+                {/* Additional Info */}
+                <div className="bg-blue-50/50 border border-blue-200/50 rounded-xl p-4">
+                  <p className="text-sm text-slate-700 leading-relaxed">
+                    <strong>Lưu ý:</strong> Tôi chỉ sử dụng duy nhất các kênh liên hệ chính thức để tương tác và hỗ trợ khách hàng mở thẻ và lên hồ sơ. Mọi thông tin đều được bảo mật và xử lý một cách chuyên nghiệp.
+                  </p>
                 </div>
               </div>
             </div>

@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Build outputs
+build/
+dist/
+
+# Environment variables
+.env*
+
+# Package files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Generated files
+*.min.js
+*.min.css
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+
+# Config files
+tailwind.config.ts
+next.config.mjs 
