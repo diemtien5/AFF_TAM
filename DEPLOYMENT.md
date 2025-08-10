@@ -1,151 +1,140 @@
-# Hướng dẫn Deployment
+# 🚀 Hướng Dẫn Deploy Lên Vercel
 
-## 🚀 Deployment lên Vercel
+## 📋 Yêu Cầu Trước Khi Deploy
 
-### Bước 1: Chuẩn bị
+1. **GitHub Repository**: Code đã được push lên GitHub
+2. **Supabase Project**: Đã tạo và cấu hình database
+3. **Vercel Account**: Đã đăng ký tài khoản Vercel
 
-1. Đảm bảo code đã được commit và push lên GitHub
-2. Tạo tài khoản Vercel (nếu chưa có)
-3. Kết nối GitHub repository với Vercel
+## 🔧 Bước 1: Chuẩn Bị Code
 
-### Bước 2: Cấu hình Environment Variables
+### Kiểm tra file cần thiết:
+```bash
+# Đảm bảo các file này có trong project
+vercel.json
+next.config.mjs
+package.json
+tsconfig.json
+tailwind.config.ts
+postcss.config.mjs
+```
 
-Trong Vercel Dashboard, thêm các biến môi trường:
+### Kiểm tra .gitignore:
+```bash
+# Đảm bảo .env* được ignore
+.env*
+```
+
+## 🌐 Bước 2: Deploy Lên Vercel
+
+### 2.1. Import Project
+1. Vào [vercel.com](https://vercel.com)
+2. Click "New Project"
+3. Chọn "Import Git Repository"
+4. Chọn repository `diemtien5/AFF1`
+
+### 2.2. Cấu Hình Project
+- **Framework Preset**: Next.js (tự động detect)
+- **Root Directory**: `./` (để nguyên)
+- **Project Name**: `aff-1` (hoặc tên bạn muốn)
+
+### 2.3. Cấu Hình Environment Variables
+Trong Vercel dashboard, thêm:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url_here
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
 ```
 
-### Bước 3: Deploy
+### 2.4. Deploy
+Click "Deploy" và chờ quá trình hoàn tất
 
-1. Vào Vercel Dashboard
-2. Click "New Project"
-3. Import GitHub repository
-4. Cấu hình:
-   - Framework Preset: Next.js
-   - Root Directory: ./
-   - Build Command: `npm run build`
-   - Output Directory: .next
-   - Install Command: `npm install`
+## 🗄️ Bước 3: Cấu Hình Database
 
-### Bước 4: Kiểm tra
+### 3.1. Chạy SQL Scripts
+Trong Supabase SQL Editor, chạy theo thứ tự:
 
-1. Truy cập URL được cung cấp
-2. Kiểm tra các tính năng chính
-3. Test admin panel
+1. `scripts/create-tables.sql`
+2. `scripts/seed-data.sql`
 
-## 🐳 Deployment với Docker
+### 3.2. Kiểm Tra Bảng
+Đảm bảo các bảng đã được tạo:
+- `loan_packages`
+- `consultants`
+- `navbar_links`
+- `admin_users`
 
-### Tạo Dockerfile
+## ✅ Bước 4: Kiểm Tra
 
-```dockerfile
-FROM node:18-alpine
+### 4.1. Test Website
+- Kiểm tra trang chủ
+- Test responsive design
+- Kiểm tra admin login
 
-WORKDIR /app
+### 4.2. Test Admin Functions
+- Login với: `haidang` / `123456`
+- Thêm/sửa/xóa gói vay
+- Upload ảnh
 
-COPY package*.json ./
-RUN npm ci --only=production
+## 🚨 Xử Lý Lỗi Thường Gặp
 
-COPY . .
-
-RUN npm run build
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
-```
-
-### Build và chạy
-
+### Lỗi Build
 ```bash
-# Build image
-docker build -t finz-app .
+# Kiểm tra dependencies
+npm install
 
-# Run container
-docker run -p 3000:3000 finz-app
+# Build local để test
+npm run build
 ```
 
-## 🔧 Cấu hình Production
+### Lỗi Database
+- Kiểm tra Supabase connection
+- Kiểm tra environment variables
+- Kiểm tra SQL scripts
 
-### 1. Environment Variables
+### Lỗi Images
+- Kiểm tra Supabase storage bucket
+- Kiểm tra image URLs
 
-Đảm bảo các biến môi trường được cấu hình đúng:
+## 🔒 Bảo Mật
 
-```env
-NODE_ENV=production
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-```
+### Environment Variables
+- **KHÔNG BAO GIỜ** commit `.env.local`
+- Sử dụng Vercel Environment Variables
+- Kiểm tra `.gitignore` có `.env*`
 
-### 2. Database
+### Admin Access
+- Thay đổi password mặc định
+- Sử dụng HTTPS
+- Giới hạn IP access nếu cần
 
-1. Tạo production database trên Supabase
-2. Chạy migration scripts
-3. Seed data cần thiết
+## 📱 Custom Domain (Tùy Chọn)
 
-### 3. Domain và SSL
-
-1. Cấu hình custom domain
-2. SSL certificate tự động với Vercel
-3. Redirect www to non-www (nếu cần)
+1. Trong Vercel dashboard
+2. Settings > Domains
+3. Add domain: `finz.vn`
+4. Cấu hình DNS records
 
 ## 📊 Monitoring
 
-### 1. Vercel Analytics
+### Vercel Analytics
+- Performance monitoring
+- Error tracking
+- User analytics
 
-- Bật Vercel Analytics trong dashboard
-- Theo dõi performance metrics
-- Monitor error rates
+### Supabase Monitoring
+- Database performance
+- API usage
+- Storage usage
 
-### 2. Supabase Monitoring
+## 🆘 Hỗ Trợ
 
-- Kiểm tra database performance
-- Monitor API usage
-- Set up alerts
+Nếu gặp vấn đề:
+1. Kiểm tra Vercel build logs
+2. Kiểm tra browser console
+3. Kiểm tra Supabase logs
+4. Tạo issue trên GitHub
 
-## 🔒 Security
+---
 
-### 1. Environment Variables
-
-- Không commit .env files
-- Sử dụng Vercel environment variables
-- Rotate keys định kỳ
-
-### 2. Database Security
-
-- Enable RLS (Row Level Security)
-- Cấu hình proper policies
-- Regular backups
-
-### 3. API Security
-
-- Rate limiting
-- CORS configuration
-- Input validation
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-1. **Build fails**
-   - Kiểm tra Node.js version
-   - Verify dependencies
-   - Check TypeScript errors
-
-2. **Environment variables not working**
-   - Verify variable names
-   - Check Vercel configuration
-   - Restart deployment
-
-3. **Database connection issues**
-   - Check Supabase URL and key
-   - Verify network connectivity
-   - Check RLS policies
-
-### Support
-
-Nếu gặp vấn đề, liên hệ:
-- **Email**: contact@finz.vn
-- **Phone**: 0888.979.809
-- **Zalo**: 0888.979.809 
+**Lưu ý**: Đảm bảo tất cả environment variables được cấu hình đúng trên Vercel trước khi deploy! 

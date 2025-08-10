@@ -398,7 +398,7 @@ export default function HomePage() {
                         if (pkg.register_link && pkg.register_link.trim() !== "") {
                           window.open(pkg.register_link, "_blank", "noopener,noreferrer")
                         } else {
-                          console.log("No register link available for", pkg.name)
+                          // No register link available
                         }
                       }}
                     >
@@ -411,7 +411,7 @@ export default function HomePage() {
                         if (pkg.detail_link && pkg.detail_link.trim() !== "") {
                           window.open(pkg.detail_link, "_blank", "noopener,noreferrer")
                         } else {
-                          console.log("No detail link available for", pkg.name)
+                          // No detail link available
                         }
                       }}
                     >

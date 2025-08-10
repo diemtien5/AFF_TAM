@@ -115,7 +115,7 @@ export default function AdminDashboard() {
       console.error("Error saving loan package:", error)
       toast({
         title: "Lỗi",
-        description: `Không thể lưu thông tin gói vay: ${error.message}`,
+        description: `Không thể lưu thông tin gói vay: ${error instanceof Error ? error.message : 'Unknown error'}`,
         variant: "destructive",
       })
     }

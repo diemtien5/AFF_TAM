@@ -38,7 +38,7 @@ export default function Error({
             <RefreshCw className="w-4 h-4 mr-2" />
             Thử lại
           </Button>
-          
+
           <Button
             variant="outline"
             onClick={() => window.location.href = '/'}
@@ -62,4 +62,4 @@ export default function Error({
       </div>
     </div>
   )
-} 
+}
