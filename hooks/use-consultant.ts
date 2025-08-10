@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
 import type { Consultant } from "@/types"
@@ -32,7 +34,7 @@ export function useConsultant() {
   const updateConsultant = async (updates: Partial<Consultant>) => {
     try {
       if (!consultant) throw new Error("No consultant found")
-      
+
       const { data, error } = await supabase
         .from("consultants")
         .update(updates)
@@ -56,4 +58,4 @@ export function useConsultant() {
     fetchConsultant,
     updateConsultant,
   }
-} 
+}

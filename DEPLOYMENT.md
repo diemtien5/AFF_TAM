@@ -137,4 +137,4 @@ Nếu gặp vấn đề:
 
 ---
 
-**Lưu ý**: Đảm bảo tất cả environment variables được cấu hình đúng trên Vercel trước khi deploy! 
+**Lưu ý**: Đảm bảo tất cả environment variables được cấu hình đúng trên Vercel trước khi deploy!

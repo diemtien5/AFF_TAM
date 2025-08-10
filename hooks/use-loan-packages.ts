@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
 import type { LoanPackage } from "@/types"
@@ -87,4 +89,4 @@ export function useLoanPackages() {
     updateLoanPackage,
     deleteLoanPackage,
   }
-} 
+}

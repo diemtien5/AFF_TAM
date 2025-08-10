@@ -19,9 +19,6 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    serverActions: true,
-  },
   compress: true,
   poweredByHeader: false,
   reactStrictMode: true,
