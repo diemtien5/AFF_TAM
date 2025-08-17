@@ -151,10 +151,10 @@ export default function HomePage() {
       <section className="py-8 px-4">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Giới thiệu sản phẩm
+            FinZ.vn
           </h1>
           <p className="text-lg text-gray-600">
-            Trang giúp khách hàng tìm kiếm và lựa chọn các sản phẩm thẻ tín dụng từ bank & các công ty tài chính uy tín tại Việt Nam
+            Tư vấn tài chính chuyên nghiệp
           </p>
         </div>
       </section>
@@ -259,37 +259,46 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Right Column - Introduction and Purpose */}
+              {/* Right Column - Important Notice */}
               <div className="space-y-6">
-                <div className="space-y-4">
+                {/* Beautiful Important Notice */}
+                <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 border border-emerald-200/60 rounded-2xl p-6 shadow-lg">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center shadow-md">
+                      <span className="text-white text-lg">💎</span>
+                    </div>
+                    <h4 className="text-lg font-bold text-emerald-800">Lưu ý quan trọng</h4>
+                  </div>
+
                   <div className="space-y-4">
-                    <h4 className="text-lg font-semibold text-slate-800">Mục đích:</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-start space-x-3">
-                        <span className="text-green-500 text-xl mt-0.5">✅</span>
-                        <span className="text-slate-700">Giới thiệu sản phẩm phù hợp hồ sơ</span>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <span className="text-green-500 text-xl mt-0.5">✅</span>
-                        <span className="text-slate-700">Hỗ trợ quy trình đăng ký minh bạch</span>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <span className="text-green-500 text-xl mt-0.5">✅</span>
-                        <span className="text-slate-700">Tư vấn rõ ràng, trách nhiệm</span>
-                      </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-sm text-emerald-700 leading-relaxed">
+                        Khách hàng lên hồ sơ <strong>không mất bất kỳ khoản phí nào</strong> trước và sau khi giải ngân
+                      </p>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-sm text-emerald-700 leading-relaxed">
+                        Hồ sơ có thể gọi tư vấn trực tiếp hoặc online tùy khách hàng
+                      </p>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-sm text-emerald-700 leading-relaxed">
+                        Mỗi khi lên hồ sơ khách hàng cần đọc kỹ các thông tin về <strong>lãi suất</strong>, <strong>phí bảo hiểm</strong> và <strong>phí thường niên</strong> (nếu kh mở thẻ tín dụng – thường được miễn phí)
+                      </p>
                     </div>
                   </div>
-                </div>
 
-                {/* Important Notice */}
-                <div className="bg-amber-50/80 border border-amber-200/60 rounded-xl p-4">
-                  <h4 className="text-sm font-semibold text-amber-800 mb-2">⚠️ Lưu ý quan trọng:</h4>
-                  <p className="text-sm text-amber-700 leading-relaxed">
-                    Khách hàng phải lưu ý trong lên hồ sơ <strong>KHÔNG mất bất kỳ khoản phí nào</strong> (Khách hàng không phải chuyển bất kỳ khoản phí nào từ tài khoản của khách hàng)
-                  </p>
-                  <p className="text-sm text-amber-700 leading-relaxed mt-2">
-                    Hồ sơ có thể gọi tư vấn trực tiếp hoặc qua Zalo
-                  </p>
+                  <div className="mt-4 pt-4 border-t border-emerald-200/50">
+                    <div className="flex items-center space-x-2 text-xs text-emerald-600">
+                      <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
+                      <span>Thông tin được bảo mật tuyệt đối</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
