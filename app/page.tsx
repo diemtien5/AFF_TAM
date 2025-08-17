@@ -154,7 +154,7 @@ export default function HomePage() {
             Giới thiệu sản phẩm
           </h1>
           <p className="text-lg text-gray-600">
-            Thẻ tín dụng & khoản vay tiêu dùng
+            Trang giúp khách hàng tìm kiếm và lựa chọn các sản phẩm thẻ tín dụng từ bank & các công ty tài chính uy tín tại Việt Nam
           </p>
         </div>
       </section>
@@ -162,8 +162,8 @@ export default function HomePage() {
       {/* Page Introduction Section */}
       <section className="py-6 md:py-8 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-br from-slate-50 to-blue-50/30 border border-slate-200/50 rounded-2xl p-8 shadow-sm">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-gradient-to-br from-slate-50 to-blue-50/30 border border-slate-200/50 rounded-2xl p-6 md:p-8 shadow-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
               {/* Left Column - Personal Information */}
               <div className="space-y-6">
                 {/* Personal Avatar and Info */}
@@ -193,20 +193,20 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                                {/* Services */}
+                {/* Services */}
                 <div className="space-y-4">
                   <div className="space-y-3 text-sm text-slate-700">
                     <div className="flex items-start space-x-2">
                       <span className="text-green-500 mt-1">•</span>
-                      <span>Mở thẻ tín dụng: <span className="font-medium">VIB, VPBank, HD Bank, TPBank</span></span>
+                      <span>Thẻ tín dụng: <span className="font-medium">HDBank, VPBank, TPBank, VIB</span></span>
                     </div>
                     <div className="flex items-start space-x-2">
                       <span className="text-green-500 mt-1">•</span>
-                      <span>Cho vay tài chính tại <span className="font-medium">Lotte Finance</span></span>
+                      <span>Thẻ mua trả góp: <span className="font-medium">Muadee, Kredivo</span></span>
                     </div>
                     <div className="flex items-start space-x-2">
                       <span className="text-green-500 mt-1">•</span>
-                      <span>Rút ví trả sau: <span className="font-medium">Kredivo, Momo, Muadee</span></span>
+                      <span>Vay online: <span className="font-medium">TNEX, CUB, FE, Lotte Finance</span></span>
                     </div>
                   </div>
                 </div>
@@ -216,12 +216,12 @@ export default function HomePage() {
                   <div className="text-center lg:text-left">
                     <p className="text-sm text-slate-600 mb-4">Liên hệ ngay để được tư vấn:</p>
 
-                                        {/* Contact Cards */}
-                    <div className="flex justify-center space-x-4">
+                    {/* Contact Cards */}
+                    <div className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4">
                       {/* Phone Card */}
                       <div className="group">
                         <Button
-                          className="w-48 h-12 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 hover:from-emerald-400 hover:via-green-400 hover:to-teal-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
+                          className="w-full sm:w-48 h-12 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 hover:from-emerald-400 hover:via-green-400 hover:to-teal-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
                           onClick={() => window.open("tel:0888979809", "_self")}
                         >
                           <div className="flex items-center justify-center space-x-2">
@@ -236,7 +236,7 @@ export default function HomePage() {
                       {/* Zalo Card */}
                       <div className="group">
                         <Button
-                          className="w-48 h-12 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-400 hover:via-indigo-400 hover:to-purple-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
+                          className="w-full sm:w-48 h-12 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-400 hover:via-indigo-400 hover:to-purple-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
                           onClick={() => window.open("https://zalo.me/0888979809", "_blank")}
                         >
                           <div className="flex items-center justify-center space-x-2">
@@ -262,10 +262,6 @@ export default function HomePage() {
               {/* Right Column - Introduction and Purpose */}
               <div className="space-y-6">
                 <div className="space-y-4">
-                  <h3 className="text-xl font-bold text-slate-800">
-                    Trang giới thiệu các sản phẩm thẻ tín dụng và khoản vay tiêu dùng từ bank & các công ty tài chính uy tín tại Việt Nam.
-                  </h3>
-
                   <div className="space-y-4">
                     <h4 className="text-lg font-semibold text-slate-800">Mục đích:</h4>
                     <div className="space-y-3">
@@ -281,22 +277,18 @@ export default function HomePage() {
                         <span className="text-green-500 text-xl mt-0.5">✅</span>
                         <span className="text-slate-700">Tư vấn rõ ràng, trách nhiệm</span>
                       </div>
-                      <div className="flex items-start space-x-3">
-                        <span className="text-green-500 text-xl mt-0.5">✅</span>
-                        <span className="text-slate-700">Không thu phí trước & sau</span>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <span className="text-green-500 text-xl mt-0.5">✅</span>
-                        <span className="text-slate-700">Hồ sơ trực tiếp hoặc online</span>
-                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Additional Info */}
-                <div className="bg-blue-50/50 border border-blue-200/50 rounded-xl p-4">
-                  <p className="text-sm text-slate-700 leading-relaxed">
-                    <strong>Lưu ý:</strong> Tôi chỉ sử dụng duy nhất các kênh liên hệ chính thức để tương tác và hỗ trợ khách hàng mở thẻ và lên hồ sơ. Mọi thông tin đều được bảo mật và xử lý một cách chuyên nghiệp.
+                {/* Important Notice */}
+                <div className="bg-amber-50/80 border border-amber-200/60 rounded-xl p-4">
+                  <h4 className="text-sm font-semibold text-amber-800 mb-2">⚠️ Lưu ý quan trọng:</h4>
+                  <p className="text-sm text-amber-700 leading-relaxed">
+                    Khách hàng phải lưu ý trong lên hồ sơ <strong>KHÔNG mất bất kỳ khoản phí nào</strong> (Khách hàng không phải chuyển bất kỳ khoản phí nào từ tài khoản của khách hàng)
+                  </p>
+                  <p className="text-sm text-amber-700 leading-relaxed mt-2">
+                    Hồ sơ có thể gọi tư vấn trực tiếp hoặc qua Zalo
                   </p>
                 </div>
               </div>
