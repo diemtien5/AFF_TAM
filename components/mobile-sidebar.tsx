@@ -47,6 +47,32 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
     return <DollarSign className="w-5 h-5 text-gray-600" />
   }
 
+  const normalize = (s: string) => (s || "").normalize("NFD").replace(/\p{Diacritic}+/gu, "").toLowerCase().trim()
+
+  const findUrl = (keywords: string[]): string | null => {
+    // Ưu tiên tham số tab
+    const byTab = (navbarLinks || []).find((l) => {
+      const url = l.url || ""
+      const m = /[?&]tab=([^&#]+)/i.exec(url)
+      if (!m) return false
+      const tab = normalize(m[1])
+      return keywords.some((k) => tab.includes(normalize(k)))
+    })
+    if (byTab && byTab.url) return byTab.url
+
+    // Fallback theo tiêu đề
+    const byTitle = (navbarLinks || []).find((l) => {
+      const t = normalize(l.title || "")
+      return keywords.some((k) => t.includes(normalize(k)))
+    })
+    return byTitle && byTitle.url ? byTitle.url : null
+  }
+
+  const urlMuadee = findUrl(["muadee"]) || ""
+  const urlTnex = findUrl(["tnex"]) || ""
+  const urlFe = findUrl(["fe", "fe credit", "fecredit"]) || ""
+  const urlCub = findUrl(["cub"]) || ""
+
   return (
     <>
       {/* Hamburger Menu Button */}
@@ -68,7 +94,6 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             <div className="flex items-center space-x-3">
               <Shield className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">FinZ.vn</span>
             </div>
             <Button variant="ghost" size="sm" onClick={toggleSidebar}>
               <X className="w-6 h-6 text-gray-700" />
@@ -114,18 +139,63 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
               <span className="text-gray-700 font-medium">Trang chủ</span>
             </Link>
 
-            {/* Dynamic Navigation Links from Admin */}
-            {navbarLinks.map((link) => (
-              <Link
-                key={link.id}
-                href={link.url}
-                onClick={toggleSidebar}
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                {getIcon(link.title)}
-                <span className="text-gray-700 font-medium">{link.title}</span>
-              </Link>
-            ))}
+            {/* Fixed Navigation Links */}
+            <Link
+              href={urlMuadee || "#"}
+              onClick={(e) => {
+                if (!urlMuadee) e.preventDefault()
+                else toggleSidebar()
+              }}
+              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${urlMuadee ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
+            >
+              <CreditCard className="w-5 h-5 text-gray-600" />
+              <span className="text-gray-700 font-medium">Thẻ Muadee</span>
+            </Link>
+            <Link
+              href={urlTnex || "#"}
+              onClick={(e) => {
+                if (!urlTnex) e.preventDefault()
+                else toggleSidebar()
+              }}
+              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${urlTnex ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
+            >
+              <Wallet className="w-5 h-5 text-gray-600" />
+              <span className="text-gray-700 font-medium">Vay Tnex</span>
+            </Link>
+            <Link
+              href={urlFe || "#"}
+              onClick={(e) => {
+                if (!urlFe) e.preventDefault()
+                else toggleSidebar()
+              }}
+              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${urlFe ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
+            >
+              <DollarSign className="w-5 h-5 text-gray-600" />
+              <span className="text-gray-700 font-medium">Vay FE</span>
+            </Link>
+            <Link
+              href={urlCub || "#"}
+              onClick={(e) => {
+                if (!urlCub) e.preventDefault()
+                else toggleSidebar()
+              }}
+              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${urlCub ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
+            >
+              <DollarSign className="w-5 h-5 text-gray-600" />
+              <span className="text-gray-700 font-medium">Vay CUB</span>
+            </Link>
+
+            {/* Admin Link */}
+            <a
+              href="http://aff.phucnguyens.id.vn/admin"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={toggleSidebar}
+              className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors opacity-60"
+            >
+              <Shield className="w-5 h-5 text-gray-600" />
+              <span className="text-gray-700 font-medium">Đăng nhập</span>
+            </a>
           </div>
 
           {/* Contact Actions */}

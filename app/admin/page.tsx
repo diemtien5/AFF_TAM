@@ -81,7 +81,7 @@ export default function AdminDashboard() {
 
       setLoanPackages(packages || [])
       setConsultant(consultants)
-      setNavbarLinks(links || [])
+      setNavbarLinks((links || []).slice(0, 8))
     } catch (error) {
       console.error("Error fetching data:", error)
     } finally {
@@ -145,14 +145,18 @@ export default function AdminDashboard() {
 
   const handleSaveNavbarLinks = async () => {
     try {
+      const sanitized = navbarLinks
+        .slice(0, 8)
+        .map((l) => ({ title: (l.title || "").trim(), url: (l.url || "").trim() }))
+        .filter((l) => l.title !== "" && l.url !== "")
+
       // Delete existing links and insert new ones
       await supabase.from("navbar_links").delete().neq("id", "")
 
-      const { error } = await supabase
-        .from("navbar_links")
-        .insert(navbarLinks.map((link) => ({ title: link.title, url: link.url })))
-
-      if (error) throw error
+      if (sanitized.length > 0) {
+        const { error } = await supabase.from("navbar_links").insert(sanitized)
+        if (error) throw error
+      }
 
       toast({
         title: "Thành công",
@@ -216,7 +220,9 @@ export default function AdminDashboard() {
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Quản lý 8 gói vay & thẻ</h2>
               <Button
+                disabled={loanPackages.length >= 8}
                 onClick={() => {
+                  if (loanPackages.length >= 8) return
                   const newPackage: LoanPackage = {
                     id: "",
                     name: "Gói vay mới",
@@ -233,7 +239,7 @@ export default function AdminDashboard() {
                   setLoanPackages([...loanPackages, newPackage])
                 }}
               >
-                Thêm gói vay mới
+                {loanPackages.length >= 8 ? "Đã đủ 8 tổ chức" : "Thêm gói vay mới"}
               </Button>
             </div>
 
@@ -408,43 +414,63 @@ export default function AdminDashboard() {
                 <CardTitle>Chỉnh sửa liên kết điều hướng</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {navbarLinks.map((link, index) => (
-                  <div key={link.id || index} className="grid grid-cols-2 gap-4 p-4 border rounded-lg">
-                    <div>
-                      <Label htmlFor={`link-title-${index}`}>Tiêu đề</Label>
-                      <Input
-                        id={`link-title-${index}`}
-                        value={link.title}
-                        onChange={(e) => {
-                          const updated = [...navbarLinks]
-                          updated[index].title = e.target.value
-                          setNavbarLinks(updated)
-                        }}
-                      />
+                {(() => {
+                  const paddedLinks = [...(navbarLinks || [])].slice(0, 8)
+                  while (paddedLinks.length < 8) {
+                    paddedLinks.push({ id: "", title: "", url: "" })
+                  }
+                  return paddedLinks.map((link, index) => (
+                    <div key={link.id || index} className="grid grid-cols-2 gap-4 p-4 border rounded-lg">
+                      <div>
+                        <Label htmlFor={`link-title-${index}`}>Tiêu đề</Label>
+                        <Input
+                          id={`link-title-${index}`}
+                          value={link.title}
+                          onChange={(e) => {
+                            const updated = [...(navbarLinks || [])].slice(0, 8)
+                            if (index >= updated.length) {
+                              updated.length = index + 1
+                              for (let i = 0; i < updated.length; i++) {
+                                if (!updated[i]) updated[i] = { id: "", title: "", url: "" }
+                              }
+                            }
+                            updated[index].title = e.target.value
+                            setNavbarLinks(updated)
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor={`link-url-${index}`}>URL</Label>
+                        <Input
+                          id={`link-url-${index}`}
+                          value={link.url}
+                          onChange={(e) => {
+                            const updated = [...(navbarLinks || [])].slice(0, 8)
+                            if (index >= updated.length) {
+                              updated.length = index + 1
+                              for (let i = 0; i < updated.length; i++) {
+                                if (!updated[i]) updated[i] = { id: "", title: "", url: "" }
+                              }
+                            }
+                            updated[index].url = e.target.value
+                            setNavbarLinks(updated)
+                          }}
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <Label htmlFor={`link-url-${index}`}>URL</Label>
-                      <Input
-                        id={`link-url-${index}`}
-                        value={link.url}
-                        onChange={(e) => {
-                          const updated = [...navbarLinks]
-                          updated[index].url = e.target.value
-                          setNavbarLinks(updated)
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                  ))
+                })()}
 
                 <div className="flex space-x-2">
                   <Button
                     onClick={() => {
-                      setNavbarLinks([...navbarLinks, { id: "", title: "Menu mới", url: "#" }])
+                      if ((navbarLinks || []).length >= 8) return
+                      setNavbarLinks([...(navbarLinks || []), { id: "", title: "", url: "" }])
                     }}
                     variant="outline"
+                    disabled={(navbarLinks || []).length >= 8}
                   >
-                    Thêm liên kết
+                    {(navbarLinks || []).length >= 8 ? "Đã đủ 8 liên kết" : "Thêm liên kết"}
                   </Button>
                   <Button onClick={handleSaveNavbarLinks}>
                     <Save className="w-4 h-4 mr-2" />

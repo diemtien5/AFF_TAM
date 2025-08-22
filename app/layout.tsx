@@ -7,12 +7,12 @@ import { Toaster } from "@/components/ui/toaster"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "FinZ.vn - Nền tảng Affiliate Thẻ Tín Dụng & Khoản Vay",
-  description: "Nền tảng Affiliate giúp bạn tìm kiếm, so sánh và lựa chọn thẻ tín dụng phù hợp. Nơi bạn an tâm sở hữu thẻ tín dụng với nhu cầu mua sắm online, thanh toán quốc tế.",
+  title: "Tư vấn tài chính - Thẻ Tín Dụng & Khoản Vay",
+  description: "Giúp bạn tìm kiếm, so sánh và lựa chọn thẻ tín dụng phù hợp. Nơi bạn an tâm sở hữu thẻ tín dụng với nhu cầu mua sắm online, thanh toán quốc tế.",
   keywords: ["thẻ tín dụng", "vay tiêu dùng", "affiliate", "tài chính", "ngân hàng"],
-  authors: [{ name: "FinZ.vn Team" }],
-  creator: "FinZ.vn",
-  publisher: "FinZ.vn",
+  authors: [{ name: "Đội ngũ tư vấn" }],
+  creator: "Trang tư vấn tài chính",
+  publisher: "Trang tư vấn tài chính",
   formatDetection: {
     email: false,
     address: false,
@@ -23,17 +23,17 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "FinZ.vn - Nền tảng Affiliate Thẻ Tín Dụng & Khoản Vay",
-    description: "Nền tảng Affiliate giúp bạn tìm kiếm, so sánh và lựa chọn thẻ tín dụng phù hợp",
+    title: "Tư vấn tài chính - Thẻ Tín Dụng & Khoản Vay",
+    description: "Giúp bạn tìm kiếm, so sánh và lựa chọn thẻ tín dụng phù hợp",
     url: "https://finz.vn",
-    siteName: "FinZ.vn",
+    siteName: "Trang tư vấn tài chính",
     locale: "vi_VN",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "FinZ.vn - Nền tảng Affiliate Thẻ Tín Dụng & Khoản Vay",
-    description: "Nền tảng Affiliate giúp bạn tìm kiếm, so sánh và lựa chọn thẻ tín dụng phù hợp",
+    title: "Tư vấn tài chính - Thẻ Tín Dụng & Khoản Vay",
+    description: "Giúp bạn tìm kiếm, so sánh và lựa chọn thẻ tín dụng phù hợp",
   },
   robots: {
     index: true,

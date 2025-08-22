@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Star, Phone, MessageCircle, Shield } from "lucide-react"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts"
 import { supabase } from "@/lib/supabase"
-import AdminLoginModal from "@/components/admin-login-modal"
+
 import MobileNavigation from "@/components/mobile-navigation"
 import Image from "next/image"
 import MobileSidebar from "@/components/mobile-sidebar"
@@ -61,7 +61,7 @@ export default function HomePage() {
   const [loanPackages, setLoanPackages] = useState<LoanPackage[]>([])
   const [consultant, setConsultant] = useState<Consultant | null>(null)
   const [navbarLinks, setNavbarLinks] = useState<NavbarLink[]>([])
-  const [showAdminModal, setShowAdminModal] = useState(false)
+
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -92,6 +92,39 @@ export default function HomePage() {
     }
   }
 
+  const getUrlFor = (keywords: string[]): string | null => {
+    const links = navbarLinks || []
+
+    const normalize = (s: string) =>
+      (s || "")
+        .normalize("NFD")
+        .replace(/\p{Diacritic}+/gu, "")
+        .toLowerCase()
+        .trim()
+
+    // 1) Ưu tiên match theo tham số tab trong URL
+    const byTab = links.find((l) => {
+      const url = l.url || ""
+      const tabMatch = /[?&]tab=([^&#]+)/i.exec(url)
+      if (!tabMatch) return false
+      const tab = normalize(tabMatch[1])
+      return keywords.some((k) => tab.includes(normalize(k)))
+    })
+    if (byTab && byTab.url) return byTab.url
+
+    // 2) Fallback: match theo tiêu đề đã normalize
+    const byTitle = links.find((l) => {
+      const t = normalize(l.title || "")
+      return keywords.some((k) => t.includes(normalize(k)))
+    })
+    return byTitle && byTitle.url ? byTitle.url : null
+  }
+
+  const urlMuadee = getUrlFor(["muadee"]) || ""
+  const urlTnex = getUrlFor(["tnex"]) || ""
+  const urlFe = getUrlFor(["fe", "fe credit", "fecredit"]) || ""
+  const urlCub = getUrlFor(["cub"]) || ""
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center">
@@ -108,7 +141,6 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <Shield className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">FinZ.vn</span>
             </div>
 
             {/* Desktop Navigation */}
@@ -121,43 +153,55 @@ export default function HomePage() {
                 <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
                   Trang chủ
                 </a>
-                <a href="/dashboard?tab=muadee" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                <a
+                  href={urlMuadee || "#"}
+                  className={`text-gray-700 font-medium transition-colors ${urlMuadee ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
+                  onClick={(e) => {
+                    if (!urlMuadee) e.preventDefault()
+                  }}
+                >
                   Thẻ Muadee
                 </a>
-                <a href="/dashboard?tab=tnex" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                <a
+                  href={urlTnex || "#"}
+                  className={`text-gray-700 font-medium transition-colors ${urlTnex ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
+                  onClick={(e) => {
+                    if (!urlTnex) e.preventDefault()
+                  }}
+                >
                   Vay Tnex
                 </a>
-                <a href="/dashboard?tab=fe" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                <a
+                  href={urlFe || "#"}
+                  className={`text-gray-700 font-medium transition-colors ${urlFe ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
+                  onClick={(e) => {
+                    if (!urlFe) e.preventDefault()
+                  }}
+                >
                   Vay FE
                 </a>
-                <a href="/dashboard?tab=cub" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                <a
+                  href={urlCub || "#"}
+                  className={`text-gray-700 font-medium transition-colors ${urlCub ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
+                  onClick={(e) => {
+                    if (!urlCub) e.preventDefault()
+                  }}
+                >
                   Vay CUB
                 </a>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowAdminModal(true)}
-                  className="text-gray-400 hover:text-gray-600 opacity-60"
+                <a
+                  href="http://aff.phucnguyens.id.vn/admin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-blue-600 opacity-60 font-medium transition-colors px-3 py-2"
                 >
-                  Admin
-                </Button>
+                  Đăng nhập
+                </a>
               </div>
             </div>
           </div>
         </div>
       </nav>
-
-      {/* Simple Header */}
-      <section className="py-8 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            FinZ.vn
-          </h1>
-          <p className="text-lg text-gray-600">
-            Tư vấn tài chính chuyên nghiệp
-          </p>
-        </div>
-      </section>
 
       {/* Page Introduction Section */}
       <section className="py-6 md:py-8 px-4">
@@ -511,20 +555,19 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Shield className="h-8 w-8 text-blue-400" />
-            <span className="text-2xl font-bold">FinZ.vn</span>
+            <span className="text-2xl font-bold">Tư vấn tài chính</span>
           </div>
           <p className="text-gray-400 mb-4">
             Nơi bạn an tâm tìm kiếm các gói vay và thẻ uy tín từ các tổ chức tài chính thuộc các ngân hàng
           </p>
-          <p className="text-sm text-gray-500">© 2024 FinZ.vn. Tất cả quyền được bảo lưu.</p>
+          <p className="text-sm text-gray-500">© 2024. Tất cả quyền được bảo lưu.</p>
         </div>
       </footer>
 
       {/* Mobile Navigation */}
       <MobileNavigation navbarLinks={navbarLinks} />
 
-      {/* Admin Login Modal */}
-      <AdminLoginModal isOpen={showAdminModal} onClose={() => setShowAdminModal(false)} />
+
     </div>
   )
 }

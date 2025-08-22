@@ -2,9 +2,9 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'FinZ.vn - Nền tảng Affiliate Thẻ Tín Dụng & Khoản Vay',
-    short_name: 'FinZ.vn',
-    description: 'Nền tảng Affiliate giúp bạn tìm kiếm, so sánh và lựa chọn thẻ tín dụng phù hợp',
+    name: 'Tư vấn tài chính - Thẻ Tín Dụng & Khoản Vay',
+    short_name: 'Tư vấn tài chính',
+    description: 'Giúp bạn tìm kiếm, so sánh và lựa chọn thẻ tín dụng phù hợp',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',
@@ -27,4 +27,4 @@ export default function manifest(): MetadataRoute.Manifest {
       },
     ],
   }
-} 
+}
