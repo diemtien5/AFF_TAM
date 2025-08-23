@@ -19,6 +19,11 @@ export default function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProp
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const [showChangePassword, setShowChangePassword] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [changePasswordLoading, setChangePasswordLoading] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,8 +40,11 @@ export default function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProp
     setLoading(true)
 
     try {
-      // Thông tin đăng nhập admin mới
-      if (username === "haidang" && password === "123456") {
+      // Lấy mật khẩu hiện tại (mặc định hoặc đã đổi)
+      const currentStoredPassword = localStorage.getItem("admin_password") || "123456"
+
+      // Thông tin đăng nhập admin
+      if (username === "haidang" && password === currentStoredPassword) {
         localStorage.setItem("admin_authenticated", "true")
         toast({
           title: "Thành công",
@@ -62,9 +70,82 @@ export default function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProp
     }
   }
 
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!currentPassword.trim() || !newPassword.trim() || !confirmPassword.trim()) {
+      toast({
+        title: "Lỗi",
+        description: "Vui lòng nhập đầy đủ thông tin",
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast({
+        title: "Lỗi",
+        description: "Mật khẩu mới và xác nhận không khớp",
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (newPassword.length < 6) {
+      toast({
+        title: "Lỗi",
+        description: "Mật khẩu mới phải có ít nhất 6 ký tự",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setChangePasswordLoading(true)
+
+    try {
+      // Lấy mật khẩu hiện tại từ localStorage hoặc mặc định
+      const currentStoredPassword = localStorage.getItem("admin_password") || "123456"
+
+      // Kiểm tra mật khẩu hiện tại
+      if (currentPassword === currentStoredPassword) {
+        // Lưu mật khẩu mới vào localStorage (có thể thay bằng API thực tế)
+        localStorage.setItem("admin_password", newPassword)
+
+        toast({
+          title: "Thành công",
+          description: "Đã đổi mật khẩu thành công!",
+        })
+
+        // Reset form
+        setCurrentPassword("")
+        setNewPassword("")
+        setConfirmPassword("")
+        setShowChangePassword(false)
+      } else {
+        toast({
+          title: "Lỗi",
+          description: "Mật khẩu hiện tại không đúng",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: "Có lỗi xảy ra khi đổi mật khẩu",
+        variant: "destructive",
+      })
+    } finally {
+      setChangePasswordLoading(false)
+    }
+  }
+
   const handleClose = () => {
     setUsername("")
     setPassword("")
+    setCurrentPassword("")
+    setNewPassword("")
+    setConfirmPassword("")
+    setShowChangePassword(false)
     onClose()
   }
 
@@ -122,7 +203,71 @@ export default function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProp
           </Button>
         </form>
 
+        {/* Nút đổi mật khẩu */}
+        <div className="text-center">
+          <Button
+            type="button"
+            variant="link"
+            onClick={() => setShowChangePassword(!showChangePassword)}
+            className="text-blue-600 hover:text-blue-700 text-sm"
+          >
+            {showChangePassword ? "Ẩn đổi mật khẩu" : "Đổi mật khẩu"}
+          </Button>
+        </div>
 
+        {/* Form đổi mật khẩu */}
+        {showChangePassword && (
+          <div className="border-t pt-4">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
+              Đổi mật khẩu
+            </h3>
+            <form onSubmit={handleChangePassword} className="space-y-4">
+              <div>
+                <Label htmlFor="current-password">Mật khẩu hiện tại</Label>
+                <Input
+                  id="current-password"
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Nhập mật khẩu hiện tại"
+                  disabled={changePasswordLoading}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="new-password">Mật khẩu mới</Label>
+                <Input
+                  id="new-password"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)"
+                  disabled={changePasswordLoading}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="confirm-password">Xác nhận mật khẩu mới</Label>
+                <Input
+                  id="confirm-password"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Nhập lại mật khẩu mới"
+                  disabled={changePasswordLoading}
+                />
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-green-600 hover:bg-green-700"
+                disabled={changePasswordLoading}
+              >
+                {changePasswordLoading ? "Đang đổi mật khẩu..." : "Đổi mật khẩu"}
+              </Button>
+            </form>
+          </div>
+        )}
 
         <Button
           variant="ghost"
