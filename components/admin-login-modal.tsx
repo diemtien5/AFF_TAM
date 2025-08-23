@@ -1,7 +1,5 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
@@ -9,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
+import { Lock, User, X } from "lucide-react"
 
 interface AdminLoginModalProps {
   isOpen: boolean
@@ -16,68 +15,129 @@ interface AdminLoginModalProps {
 }
 
 export default function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProps) {
-  const [username, setUsername] = useState("haidang")
-  const [password, setPassword] = useState("123456")
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
 
-    // Simple authentication check
-    if (username === "haidang" && password === "123456") {
-      localStorage.setItem("admin_authenticated", "true")
+    if (!username.trim() || !password.trim()) {
       toast({
-        title: "Đăng nhập thành công",
-        description: "Chuyển hướng đến trang quản trị...",
-      })
-      onClose()
-      router.push("/admin")
-    } else {
-      toast({
-        title: "Đăng nhập thất bại",
-        description: "Tên đăng nhập hoặc mật khẩu không đúng",
+        title: "Lỗi",
+        description: "Vui lòng nhập đầy đủ thông tin đăng nhập",
         variant: "destructive",
       })
+      return
     }
 
-    setLoading(false)
+    setLoading(true)
+
+    try {
+      // Thông tin đăng nhập admin mới
+      if (username === "haidang" && password === "123456") {
+        localStorage.setItem("admin_authenticated", "true")
+        toast({
+          title: "Thành công",
+          description: "Đăng nhập thành công!",
+        })
+        onClose()
+        router.push("/admin/dashboard")
+      } else {
+        toast({
+          title: "Lỗi",
+          description: "Tên đăng nhập hoặc mật khẩu không đúng",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      toast({
+        title: "Lỗi",
+        description: "Có lỗi xảy ra khi đăng nhập",
+        variant: "destructive",
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleClose = () => {
+    setUsername("")
+    setPassword("")
+    onClose()
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Đăng nhập Admin</DialogTitle>
+          <DialogTitle className="text-center text-2xl font-bold text-gray-900">
+            Đăng nhập Admin
+          </DialogTitle>
+          <p className="text-center text-gray-600 mt-2">
+            Vui lòng đăng nhập để truy cập trang quản trị
+          </p>
         </DialogHeader>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="space-y-2">
             <Label htmlFor="username">Tên đăng nhập</Label>
-            <Input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+            <div className="relative">
+              <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Nhập tên đăng nhập"
+                className="pl-10"
+                disabled={loading}
+              />
+            </div>
           </div>
 
-          <div>
+          <div className="space-y-2">
             <Label htmlFor="password">Mật khẩu</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className="relative">
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Nhập mật khẩu"
+                className="pl-10"
+                disabled={loading}
+              />
+            </div>
           </div>
 
-          <div className="flex space-x-2">
-            <Button type="submit" disabled={loading} className="flex-1">
-              {loading ? "Đang đăng nhập..." : "Đăng nhập"}
-            </Button>
-            <Button type="button" variant="outline" onClick={onClose}>
-              Hủy
-            </Button>
-          </div>
+          <Button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700"
+            disabled={loading}
+          >
+            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
+          </Button>
         </form>
+
+        <div className="p-4 bg-blue-50 rounded-lg">
+          <p className="text-sm text-blue-800 text-center">
+            <strong>Thông tin đăng nhập:</strong><br />
+            Tên đăng nhập: <code>haidang</code><br />
+            Mật khẩu: <code>123456</code>
+          </p>
+        </div>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleClose}
+          className="absolute top-4 right-4 h-8 w-8 p-0"
+        >
+          <X className="h-4 w-4" />
+        </Button>
       </DialogContent>
     </Dialog>
   )
