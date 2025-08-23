@@ -122,13 +122,7 @@ export default function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProp
           </Button>
         </form>
 
-        <div className="p-4 bg-blue-50 rounded-lg">
-          <p className="text-sm text-blue-800 text-center">
-            <strong>Thông tin đăng nhập:</strong><br />
-            Tên đăng nhập: <code>haidang</code><br />
-            Mật khẩu: <code>123456</code>
-          </p>
-        </div>
+
 
         <Button
           variant="ghost"

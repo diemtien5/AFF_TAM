@@ -123,13 +123,7 @@ export default function AdminPage() {
               </Button>
             </form>
 
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <p className="text-sm text-blue-800 text-center">
-                <strong>Thông tin đăng nhập:</strong><br />
-                Tên đăng nhập: <code>haidang</code><br />
-                Mật khẩu: <code>123456</code>
-              </p>
-            </div>
+
           </CardContent>
         </Card>
       </div>
