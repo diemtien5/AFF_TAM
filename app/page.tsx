@@ -120,6 +120,7 @@ export default function HomePage() {
     return byTitle && byTitle.url ? byTitle.url : null
   }
 
+  const urlHome = getUrlFor(["trang chu", "home"]) || ""
   const urlMuadee = getUrlFor(["muadee"]) || ""
   const urlTnex = getUrlFor(["tnex"]) || ""
   const urlFe = getUrlFor(["fe", "fe credit", "fecredit"]) || ""
@@ -150,7 +151,13 @@ export default function HomePage() {
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center space-x-8">
-                <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+                <a
+                  href={urlHome || "/"}
+                  className={`text-gray-700 font-medium transition-colors ${urlHome ? "hover:text-blue-600" : "hover:text-blue-600"}`}
+                  onClick={(e) => {
+                    // Always allow fallback "/" so no preventDefault when empty
+                  }}
+                >
                   Trang chủ
                 </a>
                 <a

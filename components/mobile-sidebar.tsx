@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Menu, X, Home, CreditCard, DollarSign, Wallet, Phone, MessageCircle, Shield } from "lucide-react"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
@@ -68,6 +67,7 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
     return byTitle && byTitle.url ? byTitle.url : null
   }
 
+  const urlHome = findUrl(["trang chu", "home"]) || "/"
   const urlMuadee = findUrl(["muadee"]) || ""
   const urlTnex = findUrl(["tnex"]) || ""
   const urlFe = findUrl(["fe", "fe credit", "fecredit"]) || ""
@@ -130,17 +130,17 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
           {/* Navigation Links */}
           <div className="flex-1 p-4 space-y-2">
             {/* Home Link */}
-            <Link
-              href="/"
+            <a
+              href={urlHome}
               onClick={toggleSidebar}
               className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors"
             >
               <Home className="w-5 h-5 text-gray-600" />
               <span className="text-gray-700 font-medium">Trang chủ</span>
-            </Link>
+            </a>
 
             {/* Fixed Navigation Links */}
-            <Link
+            <a
               href={urlMuadee || "#"}
               onClick={(e) => {
                 if (!urlMuadee) e.preventDefault()
@@ -150,8 +150,8 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
             >
               <CreditCard className="w-5 h-5 text-gray-600" />
               <span className="text-gray-700 font-medium">Thẻ Muadee</span>
-            </Link>
-            <Link
+            </a>
+            <a
               href={urlTnex || "#"}
               onClick={(e) => {
                 if (!urlTnex) e.preventDefault()
@@ -161,8 +161,8 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
             >
               <Wallet className="w-5 h-5 text-gray-600" />
               <span className="text-gray-700 font-medium">Vay Tnex</span>
-            </Link>
-            <Link
+            </a>
+            <a
               href={urlFe || "#"}
               onClick={(e) => {
                 if (!urlFe) e.preventDefault()
@@ -172,8 +172,8 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
             >
               <DollarSign className="w-5 h-5 text-gray-600" />
               <span className="text-gray-700 font-medium">Vay FE</span>
-            </Link>
-            <Link
+            </a>
+            <a
               href={urlCub || "#"}
               onClick={(e) => {
                 if (!urlCub) e.preventDefault()
@@ -183,7 +183,7 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
             >
               <DollarSign className="w-5 h-5 text-gray-600" />
               <span className="text-gray-700 font-medium">Vay CUB</span>
-            </Link>
+            </a>
 
             {/* Admin Link */}
             <a

@@ -79,9 +79,23 @@ export default function AdminDashboard() {
       // Fetch navbar links
       const { data: links } = await supabase.from("navbar_links").select("*").order("created_at", { ascending: true })
 
+      const normalize = (s: string) => (s || "").normalize("NFD").replace(/\p{Diacritic}+/gu, "").toLowerCase().trim()
+      const fixedTitles = [
+        "Trang chủ",
+        "Thẻ Muadee",
+        "Vay Tnex",
+        "Vay FE",
+        "Vay CUB",
+      ]
+
+      const fixed = fixedTitles.map((t) => {
+        const found = (links || []).find((l) => normalize(l.title).includes(normalize(t)))
+        return { id: found?.id || "", title: t, url: found?.url || "" }
+      })
+
       setLoanPackages(packages || [])
       setConsultant(consultants)
-      setNavbarLinks((links || []).slice(0, 8))
+      setNavbarLinks(fixed)
     } catch (error) {
       console.error("Error fetching data:", error)
     } finally {
@@ -145,10 +159,18 @@ export default function AdminDashboard() {
 
   const handleSaveNavbarLinks = async () => {
     try {
-      const sanitized = navbarLinks
-        .slice(0, 8)
-        .map((l) => ({ title: (l.title || "").trim(), url: (l.url || "").trim() }))
-        .filter((l) => l.title !== "" && l.url !== "")
+      const fixedTitles = [
+        "Trang chủ",
+        "Thẻ Muadee",
+        "Vay Tnex",
+        "Vay FE",
+        "Vay CUB",
+      ]
+
+      const sanitized = (navbarLinks || [])
+        .slice(0, 5)
+        .map((l, idx) => ({ title: fixedTitles[idx], url: (l.url || "").trim() }))
+        .filter((l) => l.url !== "")
 
       // Delete existing links and insert new ones
       await supabase.from("navbar_links").delete().neq("id", "")
@@ -411,50 +433,41 @@ export default function AdminDashboard() {
           <TabsContent value="navbar-links" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Chỉnh sửa liên kết điều hướng</CardTitle>
+                <CardTitle>Chỉnh sửa liên kết điều hướng (cố định 5 mục)</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {(() => {
-                  const paddedLinks = [...(navbarLinks || [])].slice(0, 8)
-                  while (paddedLinks.length < 8) {
-                    paddedLinks.push({ id: "", title: "", url: "" })
-                  }
-                  return paddedLinks.map((link, index) => (
+                  const fixedTitles = [
+                    "Trang chủ",
+                    "Thẻ Muadee",
+                    "Vay Tnex",
+                    "Vay FE",
+                    "Vay CUB",
+                  ]
+                  const fixed = (navbarLinks || [])
+                    .slice(0, 5)
+                    .map((l, i) => ({ id: l.id || "", title: fixedTitles[i], url: l.url || "" }))
+
+                  return fixed.map((link, index) => (
                     <div key={link.id || index} className="grid grid-cols-2 gap-4 p-4 border rounded-lg">
                       <div>
-                        <Label htmlFor={`link-title-${index}`}>Tiêu đề</Label>
-                        <Input
-                          id={`link-title-${index}`}
-                          value={link.title}
-                          onChange={(e) => {
-                            const updated = [...(navbarLinks || [])].slice(0, 8)
-                            if (index >= updated.length) {
-                              updated.length = index + 1
-                              for (let i = 0; i < updated.length; i++) {
-                                if (!updated[i]) updated[i] = { id: "", title: "", url: "" }
-                              }
-                            }
-                            updated[index].title = e.target.value
-                            setNavbarLinks(updated)
-                          }}
-                        />
+                        <Label htmlFor={`link-title-${index}`}>Mục menu</Label>
+                        <Input id={`link-title-${index}`} value={link.title} readOnly />
                       </div>
                       <div>
                         <Label htmlFor={`link-url-${index}`}>URL</Label>
                         <Input
                           id={`link-url-${index}`}
-                          value={link.url}
+                          value={(navbarLinks[index] && navbarLinks[index].url) || ""}
                           onChange={(e) => {
-                            const updated = [...(navbarLinks || [])].slice(0, 8)
-                            if (index >= updated.length) {
-                              updated.length = index + 1
-                              for (let i = 0; i < updated.length; i++) {
-                                if (!updated[i]) updated[i] = { id: "", title: "", url: "" }
-                              }
+                            const updated = [...(navbarLinks || [])]
+                            while (updated.length < 5) {
+                              updated.push({ id: "", title: fixedTitles[updated.length], url: "" })
                             }
-                            updated[index].url = e.target.value
-                            setNavbarLinks(updated)
+                            updated[index] = { id: updated[index]?.id || "", title: fixedTitles[index], url: e.target.value }
+                            setNavbarLinks(updated.slice(0, 5))
                           }}
+                          placeholder="https://..."
                         />
                       </div>
                     </div>
@@ -462,19 +475,9 @@ export default function AdminDashboard() {
                 })()}
 
                 <div className="flex space-x-2">
-                  <Button
-                    onClick={() => {
-                      if ((navbarLinks || []).length >= 8) return
-                      setNavbarLinks([...(navbarLinks || []), { id: "", title: "", url: "" }])
-                    }}
-                    variant="outline"
-                    disabled={(navbarLinks || []).length >= 8}
-                  >
-                    {(navbarLinks || []).length >= 8 ? "Đã đủ 8 liên kết" : "Thêm liên kết"}
-                  </Button>
                   <Button onClick={handleSaveNavbarLinks}>
                     <Save className="w-4 h-4 mr-2" />
-                    Lưu tất cả liên kết
+                    Lưu 5 liên kết
                   </Button>
                 </div>
               </CardContent>
