@@ -56,12 +56,21 @@ export function useNavbarLinks() {
   }
 
   const getNavigationUrls = () => {
+    // Fallback mặc định đến các trang nội bộ khi admin chưa cấu hình
+    const defaults = {
+      home: "/",
+      muadee: "/the-muadee",
+      tnex: "/vay-tnex",
+      fe: "/vay-fe",
+      cub: "/vay-cub",
+    }
+
     return {
-      home: getUrlFor(["trang chu", "home"]) || "/",
-      muadee: getUrlFor(["muadee"]) || "",
-      tnex: getUrlFor(["tnex"]) || "",
-      fe: getUrlFor(["fe", "fe credit", "fecredit"]) || "",
-      cub: getUrlFor(["cub"]) || ""
+      home: getUrlFor(["trang chu", "home"]) || defaults.home,
+      muadee: getUrlFor(["muadee"]) || defaults.muadee,
+      tnex: getUrlFor(["tnex"]) || defaults.tnex,
+      fe: getUrlFor(["fe", "fe credit", "fecredit"]) || defaults.fe,
+      cub: getUrlFor(["cub"]) || defaults.cub,
     }
   }
 
