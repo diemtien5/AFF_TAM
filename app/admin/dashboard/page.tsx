@@ -121,9 +121,42 @@ export default function AdminDashboard() {
     if (!consultant) return
 
     try {
-      const { error } = await supabase.from("consultants").upsert(consultant)
+      // Chỉ gửi các cột hợp lệ có trong bảng consultants
+      const payload = {
+        // nếu không có id, để undefined để Supabase tự tạo
+        id: consultant.id && consultant.id !== "" ? consultant.id : undefined,
+        name: consultant.name || "",
+        avatar: consultant.avatar || "",
+        phone: consultant.phone || "",
+        zalo: consultant.zalo || "",
+        zalo_link: consultant.zalo_link || "",
+        facebook: consultant.facebook || "",
+        credit_cards: consultant.credit_cards || "",
+        loans: consultant.loans || "",
+        ewallets: consultant.ewallets || "",
+      }
 
-      if (error) throw error
+      // Nếu đã có id => update, ngược lại => insert
+      if (payload.id) {
+        const { error } = await supabase
+          .from("consultants")
+          .update({
+            name: payload.name,
+            avatar: payload.avatar,
+            phone: payload.phone,
+            zalo: payload.zalo,
+            zalo_link: payload.zalo_link,
+            facebook: payload.facebook,
+            credit_cards: payload.credit_cards,
+            loans: payload.loans,
+            ewallets: payload.ewallets,
+          })
+          .eq("id", payload.id)
+        if (error) throw error
+      } else {
+        const { error } = await supabase.from("consultants").insert([payload])
+        if (error) throw error
+      }
 
       toast({
         title: "Thành công",

@@ -12,7 +12,7 @@ export default function AdminButton() {
     <>
       <Button
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white shadow-lg rounded-full w-14 h-14 p-0"
+        className="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white shadow-lg rounded-full w-14 h-14 p-0 hidden md:inline-flex"
         title="Admin Login"
       >
         <Shield className="w-6 h-6" />
