@@ -26,14 +26,22 @@ export default function NavbarLinksEditor({ navbarLinks, onRefresh }: NavbarLink
     "Vay CUB",
   ]
 
+  const defaultUrls: Record<string, string> = {
+    "Trang chủ": "/",
+    "Thẻ Muadee": "/the-muadee",
+    "Vay Tnex": "/vay-tnex",
+    "Vay FE": "/vay-fe",
+    "Vay CUB": "/vay-cub",
+  }
+
   // Initialize editing links when navbarLinks change
   useEffect(() => {
-    const fixed = fixedTitles.map((title, index) => {
+    const fixed = fixedTitles.map((title) => {
       const existing = navbarLinks.find(l => l.title === title)
       return {
         id: existing?.id || "",
         title: title,
-        url: existing?.url || ""
+        url: existing?.url || "",
       }
     })
     setEditingLinks(fixed)
@@ -41,22 +49,45 @@ export default function NavbarLinksEditor({ navbarLinks, onRefresh }: NavbarLink
 
   const handleSave = async () => {
     try {
-      const sanitized = editingLinks.filter((l) => l.url !== "")
+      // Luôn tạo đủ 5 bản ghi: dùng URL người dùng nhập, nếu trống thì dùng default nội bộ
+      const desired = fixedTitles.map((title) => {
+        const input = editingLinks.find(l => l.title === title)
+        const url = (input?.url || "").trim() || defaultUrls[title]
+        return { title, url }
+      })
 
-      // Delete existing links and insert new ones
-      await supabase.from("navbar_links").delete().neq("id", "")
+      // Lấy dữ liệu hiện tại để quyết định update hay insert
+      const { data: current, error: fetchError } = await supabase
+        .from("navbar_links")
+        .select("id,title,url")
+      if (fetchError) throw fetchError
 
-      if (sanitized.length > 0) {
-        const { error } = await supabase.from("navbar_links").insert(sanitized)
-        if (error) throw error
+      const currentByTitle = new Map<string, NavbarLink>()
+      ;(current || []).forEach((row: any) => currentByTitle.set(row.title, row))
+
+      for (const item of desired) {
+        const existing = currentByTitle.get(item.title)
+        if (existing) {
+          if (existing.url !== item.url) {
+            const { error: updateError } = await supabase
+              .from("navbar_links")
+              .update({ url: item.url })
+              .eq("id", existing.id)
+            if (updateError) throw updateError
+          }
+        } else {
+          const { error: insertError } = await supabase
+            .from("navbar_links")
+            .insert([{ title: item.title, url: item.url }])
+          if (insertError) throw insertError
+        }
       }
 
       toast({
         title: "Thành công",
-        description: "Đã lưu các liên kết điều hướng",
+        description: "Đã lưu 5 liên kết điều hướng lên Supabase",
       })
 
-      // Refresh navbar links to update all components
       onRefresh()
     } catch (error) {
       console.error("Error saving navbar links:", error)
