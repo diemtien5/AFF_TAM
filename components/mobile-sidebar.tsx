@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Menu, X, Home, CreditCard, DollarSign, Wallet, Phone, MessageCircle, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { useNavbarLinks } from "@/hooks/use-navbar-links"
 
 interface Consultant {
   id: string
@@ -14,19 +15,14 @@ interface Consultant {
   zalo_link?: string
 }
 
-interface NavbarLink {
-  id: string
-  title: string
-  url: string
-}
-
 interface MobileSidebarProps {
   consultant: Consultant | null
-  navbarLinks: NavbarLink[]
 }
 
-export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebarProps) {
+export default function MobileSidebar({ consultant }: MobileSidebarProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const { getNavigationUrls } = useNavbarLinks()
+  const navigationUrls = getNavigationUrls()
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
@@ -45,33 +41,6 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
     }
     return <DollarSign className="w-5 h-5 text-gray-600" />
   }
-
-  const normalize = (s: string) => (s || "").normalize("NFD").replace(/\p{Diacritic}+/gu, "").toLowerCase().trim()
-
-  const findUrl = (keywords: string[]): string | null => {
-    // Ưu tiên tham số tab
-    const byTab = (navbarLinks || []).find((l) => {
-      const url = l.url || ""
-      const m = /[?&]tab=([^&#]+)/i.exec(url)
-      if (!m) return false
-      const tab = normalize(m[1])
-      return keywords.some((k) => tab.includes(normalize(k)))
-    })
-    if (byTab && byTab.url) return byTab.url
-
-    // Fallback theo tiêu đề
-    const byTitle = (navbarLinks || []).find((l) => {
-      const t = normalize(l.title || "")
-      return keywords.some((k) => t.includes(normalize(k)))
-    })
-    return byTitle && byTitle.url ? byTitle.url : null
-  }
-
-  const urlHome = findUrl(["trang chu", "home"]) || "/"
-  const urlMuadee = findUrl(["muadee"]) || ""
-  const urlTnex = findUrl(["tnex"]) || ""
-  const urlFe = findUrl(["fe", "fe credit", "fecredit"]) || ""
-  const urlCub = findUrl(["cub"]) || ""
 
   return (
     <>
@@ -131,7 +100,7 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
           <div className="flex-1 p-4 space-y-2">
             {/* Home Link */}
             <a
-              href={urlHome}
+              href={navigationUrls.home}
               onClick={toggleSidebar}
               className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors"
             >
@@ -141,45 +110,45 @@ export default function MobileSidebar({ consultant, navbarLinks }: MobileSidebar
 
             {/* Fixed Navigation Links */}
             <a
-              href={urlMuadee || "#"}
+              href={navigationUrls.muadee || "#"}
               onClick={(e) => {
-                if (!urlMuadee) e.preventDefault()
+                if (!navigationUrls.muadee) e.preventDefault()
                 else toggleSidebar()
               }}
-              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${urlMuadee ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
+              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${navigationUrls.muadee ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
             >
               <CreditCard className="w-5 h-5 text-gray-600" />
               <span className="text-gray-700 font-medium">Thẻ Muadee</span>
             </a>
             <a
-              href={urlTnex || "#"}
+              href={navigationUrls.tnex || "#"}
               onClick={(e) => {
-                if (!urlTnex) e.preventDefault()
+                if (!navigationUrls.tnex) e.preventDefault()
                 else toggleSidebar()
               }}
-              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${urlTnex ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
+              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${navigationUrls.tnex ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
             >
               <Wallet className="w-5 h-5 text-gray-600" />
               <span className="text-gray-700 font-medium">Vay Tnex</span>
             </a>
             <a
-              href={urlFe || "#"}
+              href={navigationUrls.fe || "#"}
               onClick={(e) => {
-                if (!urlFe) e.preventDefault()
+                if (!navigationUrls.fe) e.preventDefault()
                 else toggleSidebar()
               }}
-              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${urlFe ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
+              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${navigationUrls.fe ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
             >
               <DollarSign className="w-5 h-5 text-gray-600" />
               <span className="text-gray-700 font-medium">Vay FE</span>
             </a>
             <a
-              href={urlCub || "#"}
+              href={navigationUrls.cub || "#"}
               onClick={(e) => {
-                if (!urlCub) e.preventDefault()
+                if (!navigationUrls.cub) e.preventDefault()
                 else toggleSidebar()
               }}
-              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${urlCub ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
+              className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${navigationUrls.cub ? "hover:bg-gray-100" : "opacity-50 cursor-not-allowed"}`}
             >
               <DollarSign className="w-5 h-5 text-gray-600" />
               <span className="text-gray-700 font-medium">Vay CUB</span>

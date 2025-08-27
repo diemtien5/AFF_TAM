@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Star, Phone, MessageCircle, Shield } from "lucide-react"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts"
 import { supabase } from "@/lib/supabase"
+import { useNavbarLinks } from "@/hooks/use-navbar-links"
 
 import MobileNavigation from "@/components/mobile-navigation"
 import Image from "next/image"
@@ -60,7 +61,7 @@ const chartData = [
 export default function HomePage() {
   const [loanPackages, setLoanPackages] = useState<LoanPackage[]>([])
   const [consultant, setConsultant] = useState<Consultant | null>(null)
-  const [navbarLinks, setNavbarLinks] = useState<NavbarLink[]>([])
+  const { navbarLinks, loading: navbarLoading, getNavigationUrls } = useNavbarLinks()
 
   const [loading, setLoading] = useState(true)
 
@@ -79,12 +80,8 @@ export default function HomePage() {
       // Fetch consultant info
       const { data: consultants } = await supabase.from("consultants").select("*").limit(1).single()
 
-      // Fetch navbar links
-      const { data: links } = await supabase.from("navbar_links").select("*").order("created_at", { ascending: true })
-
       setLoanPackages(packages || [])
       setConsultant(consultants)
-      setNavbarLinks(links || [])
     } catch (error) {
       console.error("Error fetching data:", error)
     } finally {
@@ -92,41 +89,10 @@ export default function HomePage() {
     }
   }
 
-  const getUrlFor = (keywords: string[]): string | null => {
-    const links = navbarLinks || []
+  // Get navigation URLs from the hook
+  const navigationUrls = getNavigationUrls()
 
-    const normalize = (s: string) =>
-      (s || "")
-        .normalize("NFD")
-        .replace(/\p{Diacritic}+/gu, "")
-        .toLowerCase()
-        .trim()
-
-    // 1) Ưu tiên match theo tham số tab trong URL
-    const byTab = links.find((l) => {
-      const url = l.url || ""
-      const tabMatch = /[?&]tab=([^&#]+)/i.exec(url)
-      if (!tabMatch) return false
-      const tab = normalize(tabMatch[1])
-      return keywords.some((k) => tab.includes(normalize(k)))
-    })
-    if (byTab && byTab.url) return byTab.url
-
-    // 2) Fallback: match theo tiêu đề đã normalize
-    const byTitle = links.find((l) => {
-      const t = normalize(l.title || "")
-      return keywords.some((k) => t.includes(normalize(k)))
-    })
-    return byTitle && byTitle.url ? byTitle.url : null
-  }
-
-  const urlHome = getUrlFor(["trang chu", "home"]) || ""
-  const urlMuadee = getUrlFor(["muadee"]) || ""
-  const urlTnex = getUrlFor(["tnex"]) || ""
-  const urlFe = getUrlFor(["fe", "fe credit", "fecredit"]) || ""
-  const urlCub = getUrlFor(["cub"]) || ""
-
-  if (loading) {
+  if (loading || navbarLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
@@ -147,51 +113,48 @@ export default function HomePage() {
             {/* Desktop Navigation */}
             <div className="flex items-center space-x-4">
               {/* Mobile Hamburger Menu */}
-              <MobileSidebar consultant={consultant} navbarLinks={navbarLinks} />
+              <MobileSidebar consultant={consultant} />
 
               {/* Desktop Navigation */}
               <div className="hidden md:flex items-center space-x-8">
                 <a
-                  href={urlHome || "/"}
-                  className={`text-gray-700 font-medium transition-colors ${urlHome ? "hover:text-blue-600" : "hover:text-blue-600"}`}
-                  onClick={(e) => {
-                    // Always allow fallback "/" so no preventDefault when empty
-                  }}
+                  href={navigationUrls.home}
+                  className="text-gray-700 font-medium transition-colors hover:text-blue-600"
                 >
                   Trang chủ
                 </a>
                 <a
-                  href={urlMuadee || "#"}
-                  className={`text-gray-700 font-medium transition-colors ${urlMuadee ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
+                  href={navigationUrls.muadee || "#"}
+                  className={`text-gray-700 font-medium transition-colors ${navigationUrls.muadee ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
                   onClick={(e) => {
-                    if (!urlMuadee) e.preventDefault()
+                    if (!navigationUrls.muadee) e.preventDefault()
                   }}
                 >
                   Thẻ Muadee
                 </a>
                 <a
-                  href={urlTnex || "#"}
-                  className={`text-gray-700 font-medium transition-colors ${urlTnex ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
+                  href={navigationUrls.tnex || "#"}
+                  className={`text-gray-700 font-medium transition-colors ${navigationUrls.tnex ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
                   onClick={(e) => {
-                    if (!urlTnex) e.preventDefault()
+                    if (!navigationUrls.tnex) e.preventDefault()
                   }}
                 >
                   Vay Tnex
                 </a>
                 <a
-                  href={urlFe || "#"}
-                  className={`text-gray-700 font-medium transition-colors ${urlFe ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
+                  href={navigationUrls.fe || "#"}
+                  className={`text-gray-700 font-medium transition-colors ${navigationUrls.fe ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
                   onClick={(e) => {
-                    if (!urlFe) e.preventDefault()
+                    if (!navigationUrls.fe) e.preventDefault()
                   }}
                 >
                   Vay FE
                 </a>
                 <a
-                  href={urlCub || "#"}
-                  className={`text-gray-700 font-medium transition-colors ${urlCub ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
+                  href={navigationUrls.cub || "#"}
+                  className={`text-gray-700 font-medium transition-colors ${navigationUrls.cub ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
                   onClick={(e) => {
-                    if (!urlCub) e.preventDefault()
+                    if (!navigationUrls.cub) e.preventDefault()
                   }}
                 >
                   Vay CUB
@@ -572,7 +535,7 @@ export default function HomePage() {
       </footer>
 
       {/* Mobile Navigation */}
-      <MobileNavigation navbarLinks={navbarLinks} />
+      <MobileNavigation />
 
 
     </div>

@@ -2,45 +2,18 @@
 
 import { Home, CreditCard, DollarSign, Wallet } from "lucide-react"
 import React from "react"
+import { useNavbarLinks } from "@/hooks/use-navbar-links"
 
-interface NavbarLink {
-  id: string
-  title: string
-  url: string
-}
-
-interface MobileNavigationProps {
-  navbarLinks: NavbarLink[]
-}
-
-export default function MobileNavigation({ navbarLinks }: MobileNavigationProps) {
-  const normalize = (s: string) => (s || "").normalize("NFD").replace(/\p{Diacritic}+/gu, "").toLowerCase().trim()
-
-  const findUrl = (keywords: string[]): string | null => {
-    // 1) match theo tab param
-    const byTab = (navbarLinks || []).find((l) => {
-      const url = l.url || ""
-      const m = /[?&]tab=([^&#]+)/i.exec(url)
-      if (!m) return false
-      const tab = normalize(m[1])
-      return keywords.some((k) => tab.includes(normalize(k)))
-    })
-    if (byTab && byTab.url) return byTab.url
-
-    // 2) fallback theo tiêu đề
-    const byTitle = (navbarLinks || []).find((l) => {
-      const t = normalize(l.title || "")
-      return keywords.some((k) => t.includes(normalize(k)))
-    })
-    return byTitle && byTitle.url ? byTitle.url : null
-  }
+export default function MobileNavigation() {
+  const { getNavigationUrls } = useNavbarLinks()
+  const navigationUrls = getNavigationUrls()
 
   const items = [
-    { id: "home", title: "Trang chủ", url: findUrl(["trang chu", "home"]) || "/", icon: <Home className="w-5 h-5 mb-1" /> },
-    { id: "muadee", title: "Thẻ Muadee", url: findUrl(["muadee"]) || "", icon: <CreditCard className="w-5 h-5 mb-1" /> },
-    { id: "tnex", title: "Vay Tnex", url: findUrl(["tnex"]) || "", icon: <Wallet className="w-5 h-5 mb-1" /> },
-    { id: "fe", title: "Vay FE", url: findUrl(["fe", "fe credit", "fecredit"]) || "", icon: <DollarSign className="w-5 h-5 mb-1" /> },
-    { id: "cub", title: "Vay CUB", url: findUrl(["cub"]) || "", icon: <DollarSign className="w-5 h-5 mb-1" /> },
+    { id: "home", title: "Trang chủ", url: navigationUrls.home, icon: <Home className="w-5 h-5 mb-1" /> },
+    { id: "muadee", title: "Thẻ Muadee", url: navigationUrls.muadee || "", icon: <CreditCard className="w-5 h-5 mb-1" /> },
+    { id: "tnex", title: "Vay Tnex", url: navigationUrls.tnex || "", icon: <Wallet className="w-5 h-5 mb-1" /> },
+    { id: "fe", title: "Vay FE", url: navigationUrls.fe || "", icon: <DollarSign className="w-5 h-5 mb-1" /> },
+    { id: "cub", title: "Vay CUB", url: navigationUrls.cub || "", icon: <DollarSign className="w-5 h-5 mb-1" /> },
   ]
 
   return (

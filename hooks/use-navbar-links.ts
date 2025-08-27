@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
-import type { NavbarLink } from "@/types"
+import { NavbarLink } from "@/types"
 
 export function useNavbarLinks() {
   const [navbarLinks, setNavbarLinks] = useState<NavbarLink[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchNavbarLinks()
@@ -15,78 +14,62 @@ export function useNavbarLinks() {
 
   const fetchNavbarLinks = async () => {
     try {
-      setLoading(true)
-      const { data, error } = await supabase
+      const { data: links } = await supabase
         .from("navbar_links")
         .select("*")
         .order("created_at", { ascending: true })
 
-      if (error) throw error
-      setNavbarLinks(data || [])
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to fetch navbar links")
+      setNavbarLinks(links || [])
+    } catch (error) {
+      console.error("Error fetching navbar links:", error)
     } finally {
       setLoading(false)
     }
   }
 
-  const addNavbarLink = async (linkData: Omit<NavbarLink, "id" | "created_at">) => {
-    try {
-      const { data, error } = await supabase
-        .from("navbar_links")
-        .insert([linkData])
-        .select()
-        .single()
+  const getUrlFor = (keywords: string[]): string | null => {
+    const links = navbarLinks || []
 
-      if (error) throw error
-      setNavbarLinks(prev => [...prev, data])
-      return data
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to add navbar link")
-      throw err
-    }
+    const normalize = (s: string) =>
+      (s || "")
+        .normalize("NFD")
+        .replace(/\p{Diacritic}+/gu, "")
+        .toLowerCase()
+        .trim()
+
+    // 1) Ưu tiên match theo tham số tab trong URL
+    const byTab = links.find((l) => {
+      const url = l.url || ""
+      const tabMatch = /[?&]tab=([^&#]+)/i.exec(url)
+      if (!tabMatch) return false
+      const tab = normalize(tabMatch[1])
+      return keywords.some((k) => tab.includes(normalize(k)))
+    })
+    if (byTab && byTab.url) return byTab.url
+
+    // 2) Fallback: match theo tiêu đề đã normalize
+    const byTitle = links.find((l) => {
+      const t = normalize(l.title || "")
+      return keywords.some((k) => t.includes(normalize(k)))
+    })
+    return byTitle && byTitle.url ? byTitle.url : null
   }
 
-  const updateNavbarLink = async (id: string, updates: Partial<NavbarLink>) => {
-    try {
-      const { data, error } = await supabase
-        .from("navbar_links")
-        .update(updates)
-        .eq("id", id)
-        .select()
-        .single()
-
-      if (error) throw error
-      setNavbarLinks(prev => prev.map(link => link.id === id ? data : link))
-      return data
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to update navbar link")
-      throw err
-    }
-  }
-
-  const deleteNavbarLink = async (id: string) => {
-    try {
-      const { error } = await supabase
-        .from("navbar_links")
-        .delete()
-        .eq("id", id)
-
-      if (error) throw error
-      setNavbarLinks(prev => prev.filter(link => link.id !== id))
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to delete navbar link")
-      throw err
+  const getNavigationUrls = () => {
+    return {
+      home: getUrlFor(["trang chu", "home"]) || "/",
+      muadee: getUrlFor(["muadee"]) || "",
+      tnex: getUrlFor(["tnex"]) || "",
+      fe: getUrlFor(["fe", "fe credit", "fecredit"]) || "",
+      cub: getUrlFor(["cub"]) || ""
     }
   }
 
   return {
     navbarLinks,
     loading,
-    error,
-    fetchNavbarLinks,
-    addNavbarLink,
-    updateNavbarLink,
-    deleteNavbarLink,
+    getUrlFor,
+    getNavigationUrls,
+    refresh: fetchNavbarLinks
   }
 }
