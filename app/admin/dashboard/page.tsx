@@ -121,31 +121,27 @@ export default function AdminDashboard() {
     if (!consultant) return
 
     try {
-      const base = {
-        name: consultant.name || "",
-        avatar: consultant.avatar || "",
-        phone: consultant.phone || "",
-        zalo: consultant.zalo || "",
-        zalo_link: consultant.zalo_link || "",
-        facebook: consultant.facebook || "",
-        credit_cards: consultant.credit_cards || "",
-        loans: consultant.loans || "",
-        ewallets: consultant.ewallets || "",
+      const payload = {
+        id: consultant.id && consultant.id !== "" ? consultant.id : undefined,
+        name: (consultant.name || "").trim(),
+        avatar: (consultant.avatar || "").trim(),
+        phone: (consultant.phone || "").trim(),
+        zalo: (consultant.zalo || "").trim(),
+        zalo_link: (consultant.zalo_link || "").trim(),
+        facebook: (consultant.facebook || "").trim(),
+        credit_cards: (consultant.credit_cards || "").trim(),
+        loans: (consultant.loans || "").trim(),
+        ewallets: (consultant.ewallets || "").trim(),
       }
 
-      if (consultant.id && consultant.id !== "") {
-        const { error } = await supabase
-          .from("consultants")
-          .update(base)
-          .eq("id", consultant.id)
-        if (error) throw error
-      } else {
-        // Insert mới: KHÔNG gửi id để Supabase tự sinh UUID
-        const { error } = await supabase
-          .from("consultants")
-          .insert([base])
-        if (error) throw error
-      }
+      const { data, error } = await supabase
+        .from("consultants")
+        .upsert(payload, { onConflict: "id" })
+        .select("*")
+        .single()
+
+      if (error) throw error
+      if (data) setConsultant(data as Consultant)
 
       toast({
         title: "Thành công",
