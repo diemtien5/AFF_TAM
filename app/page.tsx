@@ -174,16 +174,16 @@ export default function HomePage() {
       </nav>
 
       {/* Page Introduction Section */}
-      <section className="py-6 md:py-8 px-4">
+      <section className="py-4 md:py-8 px-3 md:px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-br from-slate-50 to-blue-50/30 border border-slate-200/50 rounded-2xl p-6 md:p-8 shadow-sm">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+          <div className="bg-gradient-to-br from-slate-50 to-blue-50/30 border border-slate-200/50 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
               {/* Left Column - Personal Information */}
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 {/* Personal Avatar and Info */}
                 <div className="relative">
                   {/* Avatar - positioned at top left */}
-                  <div className="absolute top-0 left-0 w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-blue-100 to-cyan-100 shadow-lg">
+                  <div className="absolute top-0 left-0 w-14 h-14 md:w-16 md:h-16 rounded-full overflow-hidden bg-gradient-to-br from-blue-100 to-cyan-100 shadow-lg">
                     {consultant && consultant.avatar ? (
                       <Image
                         src={consultant.avatar}
@@ -194,22 +194,22 @@ export default function HomePage() {
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center">
-                        <span className="text-blue-600 text-2xl">👤</span>
+                        <span className="text-blue-600 text-xl md:text-2xl">👤</span>
                       </div>
                     )}
                   </div>
 
                   {/* Personal Details - with left margin to avoid overlap */}
-                  <div className="ml-20 space-y-2">
-                    <h3 className="text-lg font-bold text-slate-800">Nguyễn Thành Phúc</h3>
+                  <div className="ml-16 md:ml-20 space-y-2">
+                    <h3 className="text-base md:text-lg font-bold text-slate-800">Nguyễn Thành Phúc</h3>
                     <p className="text-sm text-slate-600 font-medium">Tư vấn tài chính</p>
-                    <div className="w-24 h-px bg-slate-300"></div>
+                    <div className="w-20 md:w-24 h-px bg-slate-300"></div>
                   </div>
                 </div>
 
                 {/* Services */}
-                <div className="space-y-4">
-                  <div className="space-y-3 text-sm text-slate-700">
+                <div className="space-y-3 md:space-y-4">
+                  <div className="space-y-2 md:space-y-3 text-sm text-slate-700">
                     <div className="flex items-start space-x-2">
                       <span className="text-green-500 mt-1">•</span>
                       <span>Thẻ tín dụng: <span className="font-medium">HDBank, VPBank, TPBank, VIB</span></span>
@@ -226,20 +226,20 @@ export default function HomePage() {
                 </div>
 
                 {/* Contact Information & Action Buttons */}
-                <div className="space-y-4">
+                <div className="space-y-3 md:space-y-4">
                   <div className="text-center lg:text-left">
-                    <p className="text-sm text-slate-600 mb-4">Liên hệ ngay để được tư vấn:</p>
+                    <p className="text-sm text-slate-600 mb-3 md:mb-4">Liên hệ ngay để được tư vấn:</p>
 
                     {/* Contact Cards */}
-                    <div className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4">
+                    <div className="flex flex-col sm:flex-row justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-3 md:space-x-4">
                       {/* Phone Card */}
                       <div className="group">
                         <Button
-                          className="w-full sm:w-48 h-12 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 hover:from-emerald-400 hover:via-green-400 hover:to-teal-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
+                          className="w-full sm:w-44 md:w-48 h-11 md:h-12 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 hover:from-emerald-400 hover:via-green-400 hover:to-teal-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
                           onClick={() => window.open("tel:0888979809", "_self")}
                         >
                           <div className="flex items-center justify-center space-x-2">
-                            <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                            <div className="w-5 h-5 md:w-6 md:h-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
                               <span className="text-sm">📞</span>
                             </div>
                             <span className="text-sm font-medium">0888.979.809</span>
@@ -250,11 +250,11 @@ export default function HomePage() {
                       {/* Zalo Card */}
                       <div className="group">
                         <Button
-                          className="w-full sm:w-48 h-12 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-400 hover:via-indigo-400 hover:to-purple-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
+                          className="w-full sm:w-44 md:w-48 h-11 md:h-12 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-400 hover:via-indigo-400 hover:to-purple-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
                           onClick={() => window.open("https://zalo.me/0888979809", "_blank")}
                         >
                           <div className="flex items-center justify-center space-x-2">
-                            <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                            <div className="w-5 h-5 md:w-6 md:h-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
                               <span className="text-sm">💬</span>
                             </div>
                             <span className="text-sm font-medium">0888.979.809</span>
@@ -264,7 +264,7 @@ export default function HomePage() {
                     </div>
 
                     {/* Additional Info */}
-                    <div className="mt-4 p-3 bg-blue-50/50 border border-blue-200/30 rounded-lg">
+                    <div className="mt-3 md:mt-4 p-3 bg-blue-50/50 border border-blue-200/30 rounded-lg">
                       <p className="text-xs text-slate-600 text-center">
                         <span className="font-medium">💡</span> Hỗ trợ tư vấn miễn phí 24/7
                       </p>
@@ -274,17 +274,17 @@ export default function HomePage() {
               </div>
 
               {/* Right Column - Important Notice */}
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 {/* Beautiful Important Notice */}
-                <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 border border-emerald-200/60 rounded-2xl p-6 shadow-lg">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center shadow-md">
-                      <span className="text-white text-lg">💎</span>
+                <div className="bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 border border-emerald-200/60 rounded-2xl p-4 md:p-6 shadow-lg">
+                  <div className="flex items-center space-x-3 mb-3 md:mb-4">
+                    <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center shadow-md">
+                      <span className="text-white text-base md:text-lg">💎</span>
                     </div>
-                    <h4 className="text-lg font-bold text-emerald-800">Lưu ý quan trọng</h4>
+                    <h4 className="text-base md:text-lg font-bold text-emerald-800">Lưu ý quan trọng</h4>
                   </div>
 
-                  <div className="space-y-4">
+                  <div className="space-y-3 md:space-y-4">
                     <div className="flex items-start space-x-3">
                       <div className="w-2 h-2 bg-emerald-500 rounded-full mt-2 flex-shrink-0"></div>
                       <p className="text-sm text-emerald-700 leading-relaxed">
@@ -307,7 +307,7 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-4 border-t border-emerald-200/50">
+                  <div className="mt-3 md:mt-4 pt-3 md:pt-4 border-t border-emerald-200/50">
                     <div className="flex items-center space-x-2 text-xs text-emerald-600">
                       <span className="w-2 h-2 bg-emerald-400 rounded-full"></span>
                       <span>Thông tin được bảo mật tuyệt đối</span>

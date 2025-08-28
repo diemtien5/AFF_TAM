@@ -35,104 +35,116 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
         variant="ghost"
         size="sm"
         onClick={toggleSidebar}
-        className="md:hidden p-2 hover:bg-blue-50 rounded-xl border border-blue-100/60 shadow-sm transition-colors"
+        className="md:hidden p-2 hover:bg-blue-50 rounded-xl border border-blue-100/60 shadow-sm transition-all duration-300 hover:scale-105"
       >
         <Menu className="w-6 h-6 text-blue-600" />
       </Button>
 
-      {/* Dim overlay with blur */}
+      {/* Beautiful gradient overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-gradient-to-br from-slate-900/60 via-slate-800/40 to-slate-900/60 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-gradient-to-br from-blue-900/80 via-indigo-800/70 to-purple-900/80 z-40 md:hidden animate-in fade-in duration-300"
           onClick={toggleSidebar}
         />
       )}
 
-      {/* Modern Drawer */}
+      {/* Modern gradient drawer */}
       <div
-        className={`fixed top-0 left-0 h-full w-[86%] max-w-[360px] bg-white/95 backdrop-blur-md shadow-2xl z-50 transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed top-0 left-0 h-full w-[90%] max-w-[380px] bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 shadow-2xl z-50 transform transition-all duration-500 ease-out md:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {/* Header with consultant */}
-        <div className="p-5 border-b border-slate-200/70 bg-gradient-to-br from-white to-slate-50">
+        {/* Header with beautiful gradient */}
+        <div className="p-6 border-b border-white/30 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="relative w-12 h-12 rounded-full overflow-hidden shadow ring-2 ring-blue-100">
+            <div className="flex items-center space-x-4">
+              <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-lg ring-4 ring-white/30">
                 {consultant?.avatar ? (
-                  <Image src={consultant.avatar} alt={consultant.name} width={48} height={48} className="object-cover w-full h-full" />
+                  <Image src={consultant.avatar} alt={consultant.name} width={56} height={56} className="object-cover w-full h-full" />
                 ) : (
-                  <div className="w-full h-full bg-blue-100 flex items-center justify-center text-blue-700">👤</div>
+                  <div className="w-full h-full bg-white/20 flex items-center justify-center text-white text-xl">👤</div>
                 )}
               </div>
               <div>
-                <div className="text-sm text-slate-500">Tư vấn viên</div>
-                <div className="font-semibold text-slate-800 leading-tight">{consultant?.name || "Hỗ trợ tài chính"}</div>
+                <div className="text-sm text-white/80 font-medium">Tư vấn viên</div>
+                <div className="font-bold text-white text-lg leading-tight">{consultant?.name || "Hỗ trợ tài chính"}</div>
               </div>
             </div>
-            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="hover:bg-slate-100 rounded-xl">
-              <X className="w-5 h-5 text-slate-700" />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className="hover:bg-white/20 rounded-full text-white hover:scale-110 transition-all duration-300"
+            >
+              <X className="w-6 h-6" />
             </Button>
           </div>
         </div>
 
-        {/* Navigation list */}
-        <nav className="px-2 py-3">
+        {/* Navigation list with smooth animations */}
+        <nav className="px-3 py-4 space-y-2">
           {[
-            { id: "home", title: "Trang chủ", href: navigationUrls.home, icon: <Home className="w-5 h-5" /> },
-            { id: "muadee", title: "Thẻ Muadee", href: navigationUrls.muadee, icon: <CreditCard className="w-5 h-5" /> },
-            { id: "tnex", title: "Vay Tnex", href: navigationUrls.tnex, icon: <Wallet className="w-5 h-5" /> },
-            { id: "fe", title: "Vay FE", href: navigationUrls.fe, icon: <DollarSign className="w-5 h-5" /> },
-            { id: "cub", title: "Vay CUB", href: navigationUrls.cub, icon: <DollarSign className="w-5 h-5" /> },
-          ].map((item) => (
-            <a
+            { id: "home", title: "Trang chủ", href: navigationUrls.home, icon: <Home className="w-6 h-6" />, color: "from-emerald-500 to-teal-500" },
+            { id: "muadee", title: "Thẻ Muadee", href: navigationUrls.muadee, icon: <CreditCard className="w-6 h-6" />, color: "from-blue-500 to-indigo-500" },
+            { id: "tnex", title: "Vay Tnex", href: navigationUrls.tnex, icon: <Wallet className="w-6 h-6" />, color: "from-orange-500 to-red-500" },
+            { id: "fe", title: "Vay FE", href: navigationUrls.fe, icon: <DollarSign className="w-6 h-6" />, color: "from-purple-500 to-pink-500" },
+            { id: "cub", title: "Vay CUB", href: navigationUrls.cub, icon: <DollarSign className="w-6 h-6" />, color: "from-green-500 to-emerald-500" },
+          ].map((item, index) => (
+            <div
               key={item.id}
-              href={item.href || "#"}
-              onClick={(e) => {
-                if (!item.href) e.preventDefault()
-                else toggleSidebar()
-              }}
-              className={`group flex items-center justify-between mx-2 my-1 px-4 py-3 rounded-xl border transition-all ${
-                item.href
-                  ? "bg-white/70 hover:bg-white border-slate-200 hover:border-blue-200 shadow-sm hover:shadow-md"
-                  : "bg-white/60 border-slate-200/70 opacity-60 cursor-not-allowed"
+              className={`transform transition-all duration-300 ${
+                isOpen ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"
               }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
-              <div className="flex items-center space-x-3 text-slate-700 group-hover:text-blue-700">
-                <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                  {item.icon}
+              <a
+                href={item.href || "#"}
+                onClick={(e) => {
+                  if (!item.href) e.preventDefault()
+                  else toggleSidebar()
+                }}
+                className={`group flex items-center justify-between mx-1 px-4 py-4 rounded-2xl border transition-all duration-300 ${
+                  item.href
+                    ? "bg-white/80 hover:bg-white border-white/40 hover:border-white/60 shadow-lg hover:shadow-xl hover:scale-105"
+                    : "bg-white/60 border-white/40 opacity-60 cursor-not-allowed"
+                }`}
+              >
+                <div className="flex items-center space-x-4 text-slate-700 group-hover:text-slate-900">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${item.color} text-white flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-md`}>
+                    {item.icon}
+                  </div>
+                  <span className="font-semibold text-lg">{item.title}</span>
                 </div>
-                <span className="font-medium">{item.title}</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors" />
-            </a>
+                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-all duration-300 group-hover:translate-x-1" />
+              </a>
+            </div>
           ))}
         </nav>
 
-        {/* CTA zone */}
+        {/* Beautiful CTA zone */}
         {consultant && (
-          <div className="p-4 border-t border-slate-200 bg-gradient-to-br from-slate-50 to-white">
-            <div className="grid grid-cols-2 gap-3">
+          <div className="p-5 border-t border-white/30 bg-gradient-to-br from-white/90 to-slate-50/90">
+            <div className="grid grid-cols-2 gap-4">
               <Button
-                className="h-11 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md"
+                className="h-12 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 onClick={() => {
                   window.open(`tel:${consultant.phone}`, "_self")
                   toggleSidebar()
                 }}
               >
-                <Phone className="w-4 h-4 mr-2" /> Gọi ngay
+                <Phone className="w-5 h-5 mr-2" /> Gọi ngay
               </Button>
               <Button
-                className="h-11 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-md"
+                className="h-12 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
                 onClick={() => {
                   window.open(consultant.zalo_link || `https://zalo.me/${consultant.zalo}`, "_blank")
                   toggleSidebar()
                 }}
               >
-                <MessageCircle className="w-4 h-4 mr-2" /> Chat Zalo
+                <MessageCircle className="w-5 h-5 mr-2" /> Chat Zalo
               </Button>
             </div>
-            <div className="mt-3 text-center text-xs text-slate-500">Bảo mật thông tin tuyệt đối</div>
+            <div className="mt-4 text-center text-sm text-slate-600 font-medium">🔒 Bảo mật thông tin tuyệt đối</div>
           </div>
         )}
       </div>
