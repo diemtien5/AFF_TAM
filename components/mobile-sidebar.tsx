@@ -63,12 +63,12 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
 
       {/* Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-40 md:hidden" onClick={toggleSidebar} />
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-[1000] md:hidden" onClick={toggleSidebar} />
       )}
 
       {/* Off-Canvas Sidebar: 70% width */}
       <aside
-        className={`fixed top-0 left-0 h-full w-[70%] max-w-[360px] bg-slate-50 z-50 transform transition-transform duration-400 ease-out md:hidden ${
+        className={`fixed top-0 left-0 h-full w-[70%] max-w-[360px] bg-slate-50 z-[1001] transform transition-transform duration-300 ease-out md:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         role="dialog"
@@ -102,7 +102,7 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
 
             {/* Tabs block */}
             <nav className="flex-1 px-2 py-2">
-              <div className="rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200 shadow-inner">
+              <div className="rounded-xl bg-white border border-slate-200 shadow-inner">
                 {items.map((item, idx) => {
                   const Icon = item.icon
                   const active = isActive(item.href)
