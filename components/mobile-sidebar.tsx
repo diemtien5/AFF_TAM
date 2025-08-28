@@ -55,7 +55,7 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
         variant="ghost"
         size="sm"
         onClick={toggleSidebar}
-        className="md:hidden p-2 hover:bg-slate-100 rounded-xl border border-slate-200 shadow-sm transition-all duration-300"
+        className="md:hidden p-2 hover:bg-slate-100 rounded-xl border border-slate-200 shadow-sm transition-all duration-300 relative z-[1200] pointer-events-auto"
         aria-label="Open menu"
       >
         <Menu className="w-6 h-6 text-slate-800" />
@@ -63,12 +63,12 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
 
       {/* Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-[1000] md:hidden" onClick={toggleSidebar} />
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-[1100] md:hidden" onClick={toggleSidebar} />
       )}
 
       {/* Off-Canvas Sidebar: 70% width */}
       <aside
-        className={`fixed top-0 left-0 h-full w-[70%] max-w-[360px] bg-slate-50 z-[1001] transform transition-transform duration-300 ease-out md:hidden ${
+        className={`fixed top-0 left-0 h-full w-[70%] max-w-[360px] bg-slate-50 z-[1101] transform transition-transform duration-300 ease-out md:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         role="dialog"
