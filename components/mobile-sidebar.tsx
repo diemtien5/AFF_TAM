@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Menu, X, Home, CreditCard, DollarSign, Wallet, PieChart, Settings, PhoneCall, LogOut } from "lucide-react"
+import { Menu, Home, CreditCard, DollarSign, Wallet, PieChart, Settings, PhoneCall, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { useNavbarLinks } from "@/hooks/use-navbar-links"
@@ -51,29 +51,31 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
 
   return (
     <>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={toggleSidebar}
-        className="md:hidden p-2 hover:bg-slate-100 rounded-xl border border-slate-200 shadow-sm transition-all duration-300 relative z-[1200]"
-        aria-label="Open menu"
-      >
-        {isOpen ? <X className="w-6 h-6 text-slate-800" /> : <Menu className="w-6 h-6 text-slate-800" />}
-      </Button>
+      {/* Align hamburger to the right */}
+      <div className="md:hidden flex items-center">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={toggleSidebar}
+          className="p-2 hover:bg-slate-100 rounded-xl border border-slate-200 shadow-sm transition-all duration-300 relative z-[1200]"
+          aria-label="Open menu"
+        >
+          <Menu className="w-6 h-6 text-slate-800" />
+        </Button>
+      </div>
 
       {/* Overlay */}
       {isOpen && (
         <div className="fixed inset-0 bg-black/40 z-[1100] md:hidden" onClick={toggleSidebar} />
       )}
 
-      {/* Dropdown Panel under top bar */}
+      {/* Dropdown Panel (half screen height) */}
       <div
         className={`fixed top-16 left-0 right-0 px-3 md:hidden z-[1101] transition-all duration-300 ${
           isOpen ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"
         }`}
       >
-        {/* Single block (card) containing everything */}
-        <div className="rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden">
+        <div className="rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden max-h-[50vh]">
           {/* Header */}
           <div className="px-4 py-4 border-b border-slate-200 bg-gradient-to-br from-white to-slate-50">
             <div className="flex items-center space-x-3">
@@ -87,13 +89,12 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
               <div>
                 <div className="text-xs text-slate-500">Xin chào</div>
                 <div className="font-semibold text-slate-900 leading-tight">{consultant?.name || "Khách hàng"}</div>
-                <div className="text-xs text-slate-500 mt-0.5">Số dư: <span className="font-semibold text-slate-800">15,800,000 ₫</span></div>
               </div>
             </div>
           </div>
 
           {/* Tabs list inside one block */}
-          <nav className="px-2 py-2">
+          <nav className="px-2 py-2 overflow-y-auto max-h-[35vh]">
             <div className="rounded-xl bg-white border border-slate-200 shadow-inner">
               {items.map((item, idx) => {
                 const Icon = item.icon
