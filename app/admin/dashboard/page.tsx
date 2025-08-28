@@ -121,10 +121,7 @@ export default function AdminDashboard() {
     if (!consultant) return
 
     try {
-      // Chỉ gửi các cột hợp lệ có trong bảng consultants
-      const payload = {
-        // nếu không có id, để undefined để Supabase tự tạo
-        id: consultant.id && consultant.id !== "" ? consultant.id : undefined,
+      const base = {
         name: consultant.name || "",
         avatar: consultant.avatar || "",
         phone: consultant.phone || "",
@@ -136,25 +133,17 @@ export default function AdminDashboard() {
         ewallets: consultant.ewallets || "",
       }
 
-      // Nếu đã có id => update, ngược lại => insert
-      if (payload.id) {
+      if (consultant.id && consultant.id !== "") {
         const { error } = await supabase
           .from("consultants")
-          .update({
-            name: payload.name,
-            avatar: payload.avatar,
-            phone: payload.phone,
-            zalo: payload.zalo,
-            zalo_link: payload.zalo_link,
-            facebook: payload.facebook,
-            credit_cards: payload.credit_cards,
-            loans: payload.loans,
-            ewallets: payload.ewallets,
-          })
-          .eq("id", payload.id)
+          .update(base)
+          .eq("id", consultant.id)
         if (error) throw error
       } else {
-        const { error } = await supabase.from("consultants").insert([payload])
+        // Insert mới: KHÔNG gửi id để Supabase tự sinh UUID
+        const { error } = await supabase
+          .from("consultants")
+          .insert([base])
         if (error) throw error
       }
 
@@ -166,7 +155,7 @@ export default function AdminDashboard() {
       console.error("Error saving consultant:", error)
       toast({
         title: "Lỗi",
-        description: "Không thể lưu thông tin nhân viên tư vấn",
+        description: `Không thể lưu thông tin nhân viên tư vấn${error instanceof Error ? ": " + error.message : ""}`,
         variant: "destructive",
       })
     }
