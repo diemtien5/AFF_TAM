@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Menu, X, Home, CreditCard, DollarSign, Wallet, Phone, MessageCircle, ChevronRight } from "lucide-react"
+import { Menu, X, Home, CreditCard, DollarSign, Wallet, PieChart, Settings, PhoneCall, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { useNavbarLinks } from "@/hooks/use-navbar-links"
@@ -24,7 +24,20 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
   const { getNavigationUrls } = useNavbarLinks()
   const navigationUrls = getNavigationUrls()
 
+  const ACTIVE = "#1DA1F2"
+  const INACTIVE = "#9E9E9E"
+
   const toggleSidebar = () => setIsOpen(!isOpen)
+
+  const items = [
+    { id: "home", title: "Trang chủ", href: navigationUrls.home, icon: Home },
+    { id: "muadee", title: "Thẻ muadee", href: navigationUrls.muadee, icon: CreditCard },
+    { id: "tnex", title: "Vay Tnex", href: navigationUrls.tnex, icon: DollarSign },
+    { id: "fe", title: "Vay FE", href: navigationUrls.fe, icon: Wallet },
+    { id: "cub", title: "Vay CUB", href: navigationUrls.cub, icon: PieChart },
+    { id: "settings", title: "Cài đặt", href: "#", icon: Settings },
+    { id: "support", title: "Hỗ trợ", href: consultant?.zalo_link || (consultant?.zalo ? `https://zalo.me/${consultant.zalo}` : "#"), icon: PhoneCall },
+  ] as const
 
   return (
     <>
@@ -33,20 +46,23 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
         size="sm"
         onClick={toggleSidebar}
         className="md:hidden p-2 hover:bg-slate-100 rounded-xl border border-slate-200 shadow-sm transition-all duration-300"
+        aria-label="Open menu"
       >
         <Menu className="w-6 h-6 text-slate-800" />
       </Button>
 
-      {/* Solid overlay */}
+      {/* Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black/40 z-40 md:hidden" onClick={toggleSidebar} />
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-[2px] z-40 md:hidden" onClick={toggleSidebar} />
       )}
 
-      {/* Clean solid drawer */}
-      <div
-        className={`fixed top-0 left-0 h-full w-[88%] max-w-[370px] bg-white z-50 transform transition-transform duration-400 ease-out md:hidden ${
+      {/* Off-Canvas Sidebar: 70% width */}
+      <aside
+        className={`fixed top-0 left-0 h-full w-[70%] max-w-[360px] bg-white z-50 transform transition-transform duration-400 ease-out md:hidden ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
+        role="dialog"
+        aria-modal="true"
       >
         {/* Header */}
         <div className="p-5 border-b border-slate-200">
@@ -60,8 +76,9 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
                 )}
               </div>
               <div>
-                <div className="text-xs text-slate-500">Tư vấn viên</div>
-                <div className="font-semibold text-slate-900 leading-tight">{consultant?.name || "Hỗ trợ tài chính"}</div>
+                <div className="text-xs text-slate-500">Xin chào</div>
+                <div className="font-semibold text-slate-900 leading-tight">{consultant?.name || "Khách hàng"}</div>
+                <div className="text-xs text-slate-500 mt-0.5">Số dư: <span className="font-semibold text-slate-800">15,800,000 ₫</span></div>
               </div>
             </div>
             <Button variant="ghost" size="icon" onClick={toggleSidebar} className="hover:bg-slate-100 rounded-full">
@@ -70,65 +87,45 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
           </div>
         </div>
 
-        {/* Navigation list */}
-        <nav className="px-2 py-3">
-          {[
-            { id: "home", title: "Trang chủ", href: navigationUrls.home, icon: <Home className="w-5 h-5" /> },
-            { id: "muadee", title: "Thẻ Muadee", href: navigationUrls.muadee, icon: <CreditCard className="w-5 h-5" /> },
-            { id: "tnex", title: "Vay Tnex", href: navigationUrls.tnex, icon: <DollarSign className="w-5 h-5" /> },
-            { id: "fe", title: "Vay FE", href: navigationUrls.fe, icon: <Wallet className="w-5 h-5" /> },
-            { id: "cub", title: "Vay CUB", href: navigationUrls.cub, icon: <DollarSign className="w-5 h-5" /> },
-          ].map((item, index) => (
-            <a
-              key={item.id}
-              href={item.href || "#"}
-              onClick={(e) => {
-                if (!item.href) e.preventDefault()
-                else toggleSidebar()
-              }}
-              className={`group flex items-center justify-between mx-2 my-1 px-4 py-3 rounded-xl border transition-all duration-300 ${
-                item.href
-                  ? "bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-300 shadow-sm hover:shadow"
-                  : "bg-white border-slate-200 opacity-60 cursor-not-allowed"
-              }`}
-              style={{ transitionDelay: `${index * 40}ms` }}
-            >
-              <div className="flex items-center space-x-3 text-slate-700">
-                <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center">
-                  {item.icon}
+        {/* Menu list */}
+        <nav className="py-2">
+          {items.map((item, idx) => {
+            const Icon = item.icon
+            const disabled = !item.href || item.href === "#"
+            const color = disabled ? INACTIVE : ACTIVE
+            return (
+              <a
+                key={item.id}
+                href={item.href || "#"}
+                onClick={(e) => {
+                  if (disabled) e.preventDefault()
+                  else toggleSidebar()
+                }}
+                className={`mx-3 my-1 flex items-center justify-between rounded-xl px-4 py-3 border shadow-sm transition-all duration-300 ${
+                  disabled
+                    ? "border-slate-200 text-slate-400 cursor-not-allowed bg-white"
+                    : "border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50"
+                }`}
+                style={{ transitionDelay: `${idx * 40}ms` }}
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center">
+                    <Icon className="w-5 h-5" style={{ color }} />
+                  </div>
+                  <span className="text-[15px] font-medium" style={{ color: disabled ? INACTIVE : "#111827" }}>{item.title}</span>
                 </div>
-                <span className="font-medium">{item.title}</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-600" />
-            </a>
-          ))}
+              </a>
+            )
+          })}
         </nav>
 
-        {/* CTA */}
-        {consultant && (
-          <div className="p-4 border-t border-slate-200 space-y-3">
-            <Button
-              className="w-full h-11 rounded-xl bg-slate-900 hover:bg-black text-white shadow"
-              onClick={() => {
-                window.open(`tel:${consultant.phone}`, "_self")
-                toggleSidebar()
-              }}
-            >
-              <Phone className="w-4 h-4 mr-2" /> Gọi ngay
-            </Button>
-
-            <Button
-              className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow"
-              onClick={() => {
-                window.open(consultant.zalo_link || `https://zalo.me/${consultant.zalo}`, "_blank")
-                toggleSidebar()
-              }}
-            >
-              <MessageCircle className="w-4 h-4 mr-2" /> Chat Zalo
-            </Button>
-          </div>
-        )}
-      </div>
+        {/* Footer Logout */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-200 bg-white">
+          <Button className="w-full h-11 rounded-xl bg-slate-900 hover:bg-black text-white shadow" onClick={toggleSidebar}>
+            <LogOut className="w-4 h-4 mr-2" /> Đăng xuất
+          </Button>
+        </div>
+      </aside>
     </>
   )
 }
