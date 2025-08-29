@@ -63,12 +63,12 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
           <Menu className="w-6 h-6 text-slate-800" />
         </Button>
 
-        {/* Dropdown Panel - drops down from hamburger button, 2/3 screen height */}
+        {/* Dropdown Panel - 2/3 width, right-aligned, no height limit */}
         {isOpen && (
-          <div className="absolute top-full right-0 mt-2 w-[85vw] max-w-[400px] z-[1201]">
-            <div className="rounded-2xl bg-white/95 backdrop-blur-md shadow-2xl border border-white/60 overflow-hidden max-h-[66vh]">
+          <div className="absolute top-full right-0 mt-2 w-[66vw] max-w-[350px] z-[1201]">
+            <div className="rounded-3xl bg-white/95 backdrop-blur-xl shadow-2xl border border-white/60 overflow-hidden">
               {/* Header section */}
-              <div className="px-6 py-6 border-b border-white/40 bg-gradient-to-br from-white/80 to-slate-50/80">
+              <div className="px-6 py-6 border-b border-white/40 bg-gradient-to-br from-white/90 to-slate-50/90">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold text-slate-800">Menu</h3>
                   <Button
@@ -81,7 +81,7 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
                   </Button>
                 </div>
 
-                {/* User info with avatar */}
+                {/* User info with avatar - removed balance line */}
                 <div className="flex items-center space-x-4">
                   <div className="relative w-14 h-14 rounded-full overflow-hidden ring-4 ring-white/60 shadow-lg">
                     {consultant?.avatar ? (
@@ -93,13 +93,12 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
                   <div>
                     <div className="text-sm text-slate-500 font-medium">Xin chào</div>
                     <div className="font-bold text-slate-900 text-lg leading-tight">{consultant?.name || "Khách hàng"}</div>
-                    <div className="text-sm text-slate-600 mt-1">Số dư: <span className="font-semibold text-slate-800">15,800,000 ₫</span></div>
                   </div>
                 </div>
               </div>
 
               {/* Navigation tabs in single card block */}
-              <nav className="px-4 py-4 overflow-y-auto max-h-[40vh]">
+              <nav className="px-4 py-4">
                 <div className="rounded-2xl bg-white/70 backdrop-blur-sm border border-white/60 shadow-inner">
                   {items.map((item, idx) => {
                     const Icon = item.icon
@@ -142,15 +141,15 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
                 </div>
               </nav>
 
-              {/* Footer actions with neumorphism style */}
+              {/* Footer actions with enhanced neumorphism style */}
               <div className="px-4 pt-3 pb-6 border-t border-white/40 bg-gradient-to-br from-white/60 to-slate-50/60">
                 <div className="space-y-3">
-                  <Button className="w-full h-12 rounded-2xl bg-slate-100/80 hover:bg-slate-200/80 text-slate-700 border border-white/60 shadow-inner hover:shadow-lg transition-all duration-300">
+                  <Button className="w-full h-12 rounded-2xl bg-gradient-to-r from-slate-100/90 to-slate-200/90 hover:from-slate-200/90 hover:to-slate-300/90 text-slate-700 border border-white/60 shadow-inner hover:shadow-lg transition-all duration-300 backdrop-blur-sm">
                     <Settings className="w-5 h-5 mr-3" /> Cài đặt
                   </Button>
 
                   <Button
-                    className="w-full h-12 rounded-2xl bg-slate-100/80 hover:bg-slate-200/80 text-slate-700 border border-white/60 shadow-inner hover:shadow-lg transition-all duration-300"
+                    className="w-full h-12 rounded-2xl bg-gradient-to-r from-slate-100/90 to-slate-200/90 hover:from-slate-200/90 hover:to-slate-300/90 text-slate-700 border border-white/60 shadow-inner hover:shadow-lg transition-all duration-300 backdrop-blur-sm"
                     onClick={() => {
                       const url = consultant?.zalo_link || (consultant?.zalo ? `https://zalo.me/${consultant.zalo}` : "")
                       if (url) window.open(url, "_blank")
@@ -159,7 +158,7 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
                     <PhoneCall className="w-5 h-5 mr-3" /> Hỗ trợ
                   </Button>
 
-                  <Button className="w-full h-12 rounded-2xl bg-red-500 hover:bg-red-600 text-white shadow-lg hover:shadow-xl transition-all duration-300" onClick={toggleSidebar}>
+                  <Button className="w-full h-12 rounded-2xl bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm" onClick={toggleSidebar}>
                     <LogOut className="w-5 h-5 mr-3" /> Đăng xuất
                   </Button>
                 </div>
