@@ -177,14 +177,7 @@ export default function HomePage() {
                 >
                   Vay CUB
                 </a>
-                <a
-                  href="http://aff.phucnguyens.id.vn/admin"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-blue-600 opacity-60 font-medium transition-colors px-3 py-2"
-                >
-                  Đăng nhập
-                </a>
+                {/* Removed admin login link on desktop per request */}
               </div>
             </div>
           </div>

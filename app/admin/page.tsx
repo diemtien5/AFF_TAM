@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,14 +19,6 @@ export default function AdminPage() {
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [changePasswordLoading, setChangePasswordLoading] = useState(false)
-
-  useEffect(() => {
-    // Kiểm tra nếu đã đăng nhập thì chuyển đến dashboard
-    const isAuthenticated = localStorage.getItem("admin_authenticated")
-    if (isAuthenticated) {
-      router.push("/admin/dashboard")
-    }
-  }, [router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -105,12 +97,9 @@ export default function AdminPage() {
     setChangePasswordLoading(true)
 
     try {
-      // Lấy mật khẩu hiện tại từ localStorage hoặc mặc định
       const currentStoredPassword = localStorage.getItem("admin_password") || "123456"
 
-      // Kiểm tra mật khẩu hiện tại
       if (currentPassword === currentStoredPassword) {
-        // Lưu mật khẩu mới vào localStorage (có thể thay bằng API thực tế)
         localStorage.setItem("admin_password", newPassword)
 
         toast({
@@ -118,7 +107,6 @@ export default function AdminPage() {
           description: "Đã đổi mật khẩu thành công!",
         })
 
-        // Reset form
         setCurrentPassword("")
         setNewPassword("")
         setConfirmPassword("")
