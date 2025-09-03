@@ -77,9 +77,11 @@ export function useTrackingActions() {
 
       if (error) {
         console.error('Error tracking impression:', error)
+        // Don't throw error to avoid breaking user experience
       }
     } catch (error) {
       console.error('Error tracking impression:', error)
+      // Don't throw error to avoid breaking user experience
     }
   }
 
@@ -111,9 +113,11 @@ export function useTrackingActions() {
 
       if (error) {
         console.error('Error tracking click:', error)
+        // Don't throw error to avoid breaking user experience
       }
     } catch (error) {
       console.error('Error tracking click:', error)
+      // Don't throw error to avoid breaking user experience
     }
   }
 
@@ -134,9 +138,11 @@ export function useTrackingActions() {
 
       if (error) {
         console.error('Error tracking navigation click:', error)
+        // Don't throw error to avoid breaking user experience
       }
     } catch (error) {
       console.error('Error tracking navigation click:', error)
+      // Don't throw error to avoid breaking user experience
     }
   }
 

@@ -68,7 +68,10 @@ export function useTracking() {
         `)
         .order("created_at", { ascending: false })
 
-      if (impressionsError) throw impressionsError
+      if (impressionsError) {
+        console.error("Impressions error:", impressionsError)
+        throw new Error(`Lỗi khi tải dữ liệu impressions: ${impressionsError.message}`)
+      }
 
       // Fetch clicks with loan package info
       const { data: clicksData, error: clicksError } = await supabase
@@ -83,7 +86,10 @@ export function useTracking() {
         `)
         .order("created_at", { ascending: false })
 
-      if (clicksError) throw clicksError
+      if (clicksError) {
+        console.error("Clicks error:", clicksError)
+        throw new Error(`Lỗi khi tải dữ liệu clicks: ${clicksError.message}`)
+      }
 
       setImpressions(impressionsData || [])
       setClicks(clicksData || [])
@@ -94,7 +100,8 @@ export function useTracking() {
 
     } catch (err) {
       console.error("Error fetching tracking data:", err)
-      setError(err instanceof Error ? err.message : "Lỗi không xác định")
+      const errorMessage = err instanceof Error ? err.message : "Lỗi không xác định khi tải dữ liệu tracking"
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

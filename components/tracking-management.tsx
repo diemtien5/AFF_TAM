@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useTracking } from "@/hooks/use-tracking"
+import TrackingTestData from "./tracking-test-data"
 import { RefreshCw, Eye, MousePointer, TrendingUp, Clock, BarChart3, Smartphone, Monitor, Globe } from "lucide-react"
 import { format } from "date-fns"
 import { vi } from "date-fns/locale"
@@ -105,11 +106,12 @@ export default function TrackingManagement() {
       </CardHeader>
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Tổng quan</TabsTrigger>
             <TabsTrigger value="impressions">Lượt hiển thị</TabsTrigger>
             <TabsTrigger value="clicks">Lượt click</TabsTrigger>
             <TabsTrigger value="analytics">Phân tích</TabsTrigger>
+            <TabsTrigger value="test">Test Data</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -389,6 +391,10 @@ export default function TrackingManagement() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="test" className="space-y-6">
+            <TrackingTestData />
           </TabsContent>
         </Tabs>
       </CardContent>
