@@ -3,10 +3,12 @@
 import { Home, CreditCard, DollarSign, Wallet, PieChart } from "lucide-react"
 import React from "react"
 import { useNavbarLinks } from "@/hooks/use-navbar-links"
+import { useTrackingActions } from "@/hooks/use-tracking-actions"
 import { usePathname } from "next/navigation"
 
 export default function MobileNavigation() {
   const { getNavigationUrls } = useNavbarLinks()
+  const { trackNavigationClick } = useTrackingActions()
   const navigationUrls = getNavigationUrls()
   const pathname = usePathname()
 
@@ -49,6 +51,7 @@ export default function MobileNavigation() {
                   <a
                     href={item.url}
                     className="-mt-10 mb-0 inline-flex flex-col items-center justify-center"
+                    onClick={() => trackNavigationClick('home')}
                   >
                     {/* Floating action button */}
                     <div
@@ -69,6 +72,7 @@ export default function MobileNavigation() {
                 href={item.url || "#"}
                 onClick={(e) => {
                   if (!item.url) e.preventDefault()
+                  else trackNavigationClick(item.id)
                 }}
                 className="flex flex-col items-center justify-center py-1"
               >

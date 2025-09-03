@@ -5,6 +5,7 @@ import { Menu, X, Home, CreditCard, DollarSign, Wallet, PieChart, Settings, Phon
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { useNavbarLinks } from "@/hooks/use-navbar-links"
+import { useTrackingActions } from "@/hooks/use-tracking-actions"
 import { usePathname } from "next/navigation"
 
 interface Consultant {
@@ -23,6 +24,7 @@ interface MobileSidebarProps {
 export default function MobileSidebar({ consultant }: MobileSidebarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const { getNavigationUrls } = useNavbarLinks()
+  const { trackNavigationClick } = useTrackingActions()
   const navigationUrls = getNavigationUrls()
   const pathname = usePathname()
 
@@ -110,7 +112,10 @@ export default function MobileSidebar({ consultant }: MobileSidebarProps) {
                         href={item.href || "#"}
                         onClick={(e) => {
                           if (!item.href) e.preventDefault()
-                          else toggleSidebar()
+                          else {
+                            trackNavigationClick(item.id)
+                            toggleSidebar()
+                          }
                         }}
                         className={`flex items-center justify-between px-5 py-4 transition-all duration-300 ${
                           active

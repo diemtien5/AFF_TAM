@@ -8,6 +8,7 @@ import { Star, Phone, MessageCircle, Shield } from "lucide-react"
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts"
 import { supabase } from "@/lib/supabase"
 import { useNavbarLinks } from "@/hooks/use-navbar-links"
+import { useTrackingActions } from "@/hooks/use-tracking-actions"
 
 import MobileNavigation from "@/components/mobile-navigation"
 import Image from "next/image"
@@ -62,12 +63,24 @@ export default function HomePage() {
   const [loanPackages, setLoanPackages] = useState<LoanPackage[]>([])
   const [consultant, setConsultant] = useState<Consultant | null>(null)
   const { navbarLinks, loading: navbarLoading, getNavigationUrls } = useNavbarLinks()
+  const { trackImpression, trackClick, trackNavigationClick } = useTrackingActions()
 
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchData()
   }, [])
+
+  // Track impressions when loan packages are loaded
+  useEffect(() => {
+    if (loanPackages.length > 0) {
+      loanPackages.forEach(pkg => {
+        if (pkg.id) {
+          trackImpression(pkg.id, 'homepage')
+        }
+      })
+    }
+  }, [loanPackages, trackImpression])
 
   const fetchData = async () => {
     try {
@@ -120,6 +133,7 @@ export default function HomePage() {
                 <a
                   href={navigationUrls.home}
                   className="text-gray-700 font-medium transition-colors hover:text-blue-600"
+                  onClick={() => trackNavigationClick('home')}
                 >
                   Trang chủ
                 </a>
@@ -128,6 +142,7 @@ export default function HomePage() {
                   className={`text-gray-700 font-medium transition-colors ${navigationUrls.muadee ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
                   onClick={(e) => {
                     if (!navigationUrls.muadee) e.preventDefault()
+                    else trackNavigationClick('muadee')
                   }}
                 >
                   Thẻ Muadee
@@ -137,6 +152,7 @@ export default function HomePage() {
                   className={`text-gray-700 font-medium transition-colors ${navigationUrls.tnex ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
                   onClick={(e) => {
                     if (!navigationUrls.tnex) e.preventDefault()
+                    else trackNavigationClick('tnex')
                   }}
                 >
                   Vay Tnex
@@ -146,6 +162,7 @@ export default function HomePage() {
                   className={`text-gray-700 font-medium transition-colors ${navigationUrls.fe ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
                   onClick={(e) => {
                     if (!navigationUrls.fe) e.preventDefault()
+                    else trackNavigationClick('fe')
                   }}
                 >
                   Vay FE
@@ -155,6 +172,7 @@ export default function HomePage() {
                   className={`text-gray-700 font-medium transition-colors ${navigationUrls.cub ? "hover:text-blue-600" : "opacity-50 cursor-not-allowed"}`}
                   onClick={(e) => {
                     if (!navigationUrls.cub) e.preventDefault()
+                    else trackNavigationClick('cub')
                   }}
                 >
                   Vay CUB
@@ -411,6 +429,7 @@ export default function HomePage() {
                       className="px-4 py-2 bg-gradient-to-r from-green-500 to-cyan-500 hover:from-green-600 hover:to-cyan-600 text-white border-0 text-sm rounded-full flex-1 max-w-[130px]"
                       onClick={() => {
                         if (pkg.register_link && pkg.register_link.trim() !== "") {
+                          trackClick(pkg.id, 'homepage_register')
                           window.open(pkg.register_link, "_blank", "noopener,noreferrer")
                         } else {
                           // No register link available
@@ -424,6 +443,7 @@ export default function HomePage() {
                       className="px-4 py-2 border-blue-200 text-blue-600 hover:bg-blue-50 bg-transparent text-sm rounded-full flex-1 max-w-[130px]"
                       onClick={() => {
                         if (pkg.detail_link && pkg.detail_link.trim() !== "") {
+                          trackClick(pkg.id, 'homepage_detail')
                           window.open(pkg.detail_link, "_blank", "noopener,noreferrer")
                         } else {
                           // No detail link available

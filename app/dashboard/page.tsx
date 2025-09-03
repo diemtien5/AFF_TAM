@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
+import { useTrackingActions } from "@/hooks/use-tracking-actions"
 
 interface LoanPackage {
   id: string
@@ -27,6 +28,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const tab = useMemo(() => normalize(searchParams.get("tab") || ""), [searchParams])
+  const { trackImpression, trackClick } = useTrackingActions()
 
   const [loanPackages, setLoanPackages] = useState<LoanPackage[]>([])
   const [loading, setLoading] = useState(true)
@@ -52,6 +54,18 @@ export default function DashboardPage() {
     if (!tab) return loanPackages
     return (loanPackages || []).filter((p) => normalize(p.slug).includes(tab) || normalize(p.name).includes(tab))
   }, [loanPackages, tab])
+
+  // Track impressions when filtered packages are loaded
+  useEffect(() => {
+    if (filtered.length > 0) {
+      const platformSource = tab ? `${tab}_page` : 'dashboard_page'
+      filtered.forEach(pkg => {
+        if (pkg.id) {
+          trackImpression(pkg.id, platformSource)
+        }
+      })
+    }
+  }, [filtered, tab, trackImpression])
 
   if (loading) {
     return (
@@ -136,6 +150,8 @@ export default function DashboardPage() {
                     className="px-4 py-2 bg-gradient-to-r from-green-500 to-cyan-500 hover:from-green-600 hover:to-cyan-600 text-white border-0 text-sm rounded-full flex-1 max-w-[130px]"
                     onClick={() => {
                       if (pkg.register_link && pkg.register_link.trim() !== "") {
+                        const platformSource = tab ? `${tab}_page_register` : 'dashboard_page_register'
+                        trackClick(pkg.id, platformSource)
                         window.open(pkg.register_link, "_blank", "noopener,noreferrer")
                       } else {
                         // No register link available
@@ -149,6 +165,8 @@ export default function DashboardPage() {
                     className="px-4 py-2 border-blue-200 text-blue-600 hover:bg-blue-50 bg-transparent text-sm rounded-full flex-1 max-w-[130px]"
                     onClick={() => {
                       if (pkg.detail_link && pkg.detail_link.trim() !== "") {
+                        const platformSource = tab ? `${tab}_page_detail` : 'dashboard_page_detail'
+                        trackClick(pkg.id, platformSource)
                         window.open(pkg.detail_link, "_blank", "noopener,noreferrer")
                       } else {
                         // No detail link available
