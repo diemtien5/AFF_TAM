@@ -11,7 +11,6 @@ export interface OfferImpression {
   loan_packages?: {
     id: string
     name: string
-    bank_name: string
   }
 }
 
@@ -27,7 +26,6 @@ export interface ClickTracking {
   loan_packages?: {
     id: string
     name: string
-    bank_name: string
   }
 }
 
@@ -62,8 +60,7 @@ export function useTracking() {
           *,
           loan_packages (
             id,
-            name,
-            bank_name
+            name
           )
         `)
         .order("created_at", { ascending: false })
@@ -80,8 +77,7 @@ export function useTracking() {
           *,
           loan_packages (
             id,
-            name,
-            bank_name
+            name
           )
         `)
         .order("created_at", { ascending: false })

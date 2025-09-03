@@ -233,7 +233,7 @@ export default function TrackingManagement() {
                                 {impression.loan_packages?.name || `Offer ${impression.offer_id}`}
                               </div>
                               <div className="text-sm text-gray-500">
-                                {impression.loan_packages?.bank_name || "Không xác định"}
+                                ID: {impression.offer_id.slice(0, 8)}...
                               </div>
                             </div>
                           </TableCell>
@@ -284,7 +284,7 @@ export default function TrackingManagement() {
                                 {click.loan_packages?.name || `Offer ${click.offer_id}`}
                               </div>
                               <div className="text-sm text-gray-500">
-                                {click.loan_packages?.bank_name || "Không xác định"}
+                                ID: {click.offer_id.slice(0, 8)}...
                               </div>
                             </div>
                           </TableCell>
