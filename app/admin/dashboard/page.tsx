@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation"
 import ImageUpload from "@/components/image-upload"
  import { useNavbarLinks } from "@/hooks/use-navbar-links"
 import NavbarLinksEditor from "@/components/navbar-links-editor"
+import TrackingManagement from "@/components/tracking-management"
 import { NavbarLink } from "@/types"
 
 interface LoanPackage {
@@ -194,10 +195,11 @@ export default function AdminDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs defaultValue="loan-packages" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="loan-packages">Quản lý gói vay</TabsTrigger>
             <TabsTrigger value="navbar-links">Liên kết điều hướng</TabsTrigger>
             <TabsTrigger value="consultant">Nhân viên tư vấn</TabsTrigger>
+            <TabsTrigger value="tracking">Quản lý tracking</TabsTrigger>
           </TabsList>
 
           {/* Loan Packages Management */}
@@ -504,6 +506,11 @@ export default function AdminDashboard() {
                 </CardContent>
               </Card>
             )}
+          </TabsContent>
+
+          {/* Tracking Management */}
+          <TabsContent value="tracking" className="space-y-6">
+            <TrackingManagement />
           </TabsContent>
         </Tabs>
       </div>
