@@ -196,6 +196,8 @@ export default function AdminDashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem("admin_authenticated")
+    localStorage.removeItem("admin_user_id")
+    localStorage.removeItem("admin_username")
     router.push("/admin")
   }
 
@@ -219,6 +221,9 @@ export default function AdminDashboard() {
                 <span>Về trang đăng nhập</span>
               </Button>
               <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+              <span className="text-sm text-gray-600">
+                Xin chào, {localStorage.getItem("admin_username") || "Admin"}
+              </span>
             </div>
             <Button variant="outline" onClick={handleLogout}>
               Đăng xuất

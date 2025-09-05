@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { toast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { Lock, User } from "lucide-react"
+import { supabase } from "@/lib/supabase"
 
 export default function AdminPage() {
   const router = useRouter()
@@ -35,12 +36,25 @@ export default function AdminPage() {
     setLoading(true)
 
     try {
-      // Lấy mật khẩu hiện tại (mặc định hoặc đã đổi)
-      const currentStoredPassword = localStorage.getItem("admin_password") || "123456"
+      // Kiểm tra thông tin đăng nhập từ Supabase
+      const { data: adminUser, error } = await supabase
+        .from("admin_users")
+        .select("*")
+        .eq("username", username.trim())
+        .eq("password", password.trim())
+        .single()
 
-      // Thông tin đăng nhập admin
-      if (username === "haidang" && password === currentStoredPassword) {
+      if (error) {
+        console.error("Database error:", error)
+        throw new Error("Lỗi kết nối database")
+      }
+
+      if (adminUser) {
+        // Lưu thông tin đăng nhập thành công
         localStorage.setItem("admin_authenticated", "true")
+        localStorage.setItem("admin_user_id", adminUser.id)
+        localStorage.setItem("admin_username", adminUser.username)
+
         toast({
           title: "Thành công",
           description: "Đăng nhập thành công!",
@@ -54,9 +68,10 @@ export default function AdminPage() {
         })
       }
     } catch (error) {
+      console.error("Login error:", error)
       toast({
         title: "Lỗi",
-        description: "Có lỗi xảy ra khi đăng nhập",
+        description: `Có lỗi xảy ra khi đăng nhập: ${error instanceof Error ? error.message : "Unknown error"}`,
         variant: "destructive",
       })
     } finally {
@@ -97,31 +112,53 @@ export default function AdminPage() {
     setChangePasswordLoading(true)
 
     try {
-      const currentStoredPassword = localStorage.getItem("admin_password") || "123456"
+      const currentUsername = localStorage.getItem("admin_username")
+      if (!currentUsername) {
+        throw new Error("Không tìm thấy thông tin người dùng")
+      }
 
-      if (currentPassword === currentStoredPassword) {
-        localStorage.setItem("admin_password", newPassword)
+      // Kiểm tra mật khẩu hiện tại
+      const { data: currentUser, error: checkError } = await supabase
+        .from("admin_users")
+        .select("*")
+        .eq("username", currentUsername)
+        .eq("password", currentPassword.trim())
+        .single()
 
-        toast({
-          title: "Thành công",
-          description: "Đã đổi mật khẩu thành công!",
-        })
-
-        setCurrentPassword("")
-        setNewPassword("")
-        setConfirmPassword("")
-        setShowChangePassword(false)
-      } else {
+      if (checkError || !currentUser) {
         toast({
           title: "Lỗi",
           description: "Mật khẩu hiện tại không đúng",
           variant: "destructive",
         })
+        return
       }
+
+      // Cập nhật mật khẩu mới
+      const { error: updateError } = await supabase
+        .from("admin_users")
+        .update({ password: newPassword.trim() })
+        .eq("id", currentUser.id)
+
+      if (updateError) {
+        console.error("Update password error:", updateError)
+        throw new Error("Lỗi cập nhật mật khẩu")
+      }
+
+      toast({
+        title: "Thành công",
+        description: "Đã đổi mật khẩu thành công!",
+      })
+
+      setCurrentPassword("")
+      setNewPassword("")
+      setConfirmPassword("")
+      setShowChangePassword(false)
     } catch (error) {
+      console.error("Change password error:", error)
       toast({
         title: "Lỗi",
-        description: "Có lỗi xảy ra khi đổi mật khẩu",
+        description: `Có lỗi xảy ra khi đổi mật khẩu: ${error instanceof Error ? error.message : "Unknown error"}`,
         variant: "destructive",
       })
     } finally {

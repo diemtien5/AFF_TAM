@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label"
 import { toast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import { Lock, User, X } from "lucide-react"
+import { supabase } from "@/lib/supabase"
 
 interface AdminLoginModalProps {
   isOpen: boolean
@@ -40,12 +41,25 @@ export default function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProp
     setLoading(true)
 
     try {
-      // Lấy mật khẩu hiện tại (mặc định hoặc đã đổi)
-      const currentStoredPassword = localStorage.getItem("admin_password") || "123456"
+      // Kiểm tra thông tin đăng nhập từ Supabase
+      const { data: adminUser, error } = await supabase
+        .from("admin_users")
+        .select("*")
+        .eq("username", username.trim())
+        .eq("password", password.trim())
+        .single()
 
-      // Thông tin đăng nhập admin
-      if (username === "haidang" && password === currentStoredPassword) {
+      if (error) {
+        console.error("Database error:", error)
+        throw new Error("Lỗi kết nối database")
+      }
+
+      if (adminUser) {
+        // Lưu thông tin đăng nhập thành công
         localStorage.setItem("admin_authenticated", "true")
+        localStorage.setItem("admin_user_id", adminUser.id)
+        localStorage.setItem("admin_username", adminUser.username)
+
         toast({
           title: "Thành công",
           description: "Đăng nhập thành công!",
@@ -60,9 +74,10 @@ export default function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProp
         })
       }
     } catch (error) {
+      console.error("Login error:", error)
       toast({
         title: "Lỗi",
-        description: "Có lỗi xảy ra khi đăng nhập",
+        description: `Có lỗi xảy ra khi đăng nhập: ${error instanceof Error ? error.message : "Unknown error"}`,
         variant: "destructive",
       })
     } finally {
