@@ -218,71 +218,7 @@ export default function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProp
           </Button>
         </form>
 
-        {/* Nút đổi mật khẩu */}
-        <div className="text-center">
-          <Button
-            type="button"
-            variant="link"
-            onClick={() => setShowChangePassword(!showChangePassword)}
-            className="text-blue-600 hover:text-blue-700 text-sm"
-          >
-            {showChangePassword ? "Ẩn đổi mật khẩu" : "Đổi mật khẩu"}
-          </Button>
-        </div>
-
-        {/* Form đổi mật khẩu */}
-        {showChangePassword && (
-          <div className="border-t pt-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 text-center">
-              Đổi mật khẩu
-            </h3>
-            <form onSubmit={handleChangePassword} className="space-y-4">
-              <div>
-                <Label htmlFor="current-password">Mật khẩu hiện tại</Label>
-                <Input
-                  id="current-password"
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Nhập mật khẩu hiện tại"
-                  disabled={changePasswordLoading}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="new-password">Mật khẩu mới</Label>
-                <Input
-                  id="new-password"
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)"
-                  disabled={changePasswordLoading}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="confirm-password">Xác nhận mật khẩu mới</Label>
-                <Input
-                  id="confirm-password"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Nhập lại mật khẩu mới"
-                  disabled={changePasswordLoading}
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-green-600 hover:bg-green-700"
-                disabled={changePasswordLoading}
-              >
-                {changePasswordLoading ? "Đang đổi mật khẩu..." : "Đổi mật khẩu"}
-              </Button>
-            </form>
-          </div>
-        )}
+        {/* Phần đổi mật khẩu đã được ẩn */}
 
         <Button
           variant="ghost"
