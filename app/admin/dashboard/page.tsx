@@ -50,7 +50,19 @@ interface Consultant {
 export default function AdminDashboard() {
   const router = useRouter()
   const [loanPackages, setLoanPackages] = useState<LoanPackage[]>([])
-  const [consultant, setConsultant] = useState<Consultant | null>(null)
+  const [consultant, setConsultant] = useState<Consultant | null>({
+    id: "",
+    name: "",
+    avatar: "",
+    phone: "",
+    zalo: "",
+    zalo_link: "",
+    facebook: "",
+    email: "",
+    credit_cards: "",
+    loans: "",
+    ewallets: "",
+  })
   const { navbarLinks, refresh: refreshNavbarLinks } = useNavbarLinks()
   const [loading, setLoading] = useState(true)
 
@@ -74,11 +86,13 @@ export default function AdminDashboard() {
         .select("*")
         .order("created_at", { ascending: true })
 
-      // Fetch consultant info
-      const { data: consultants } = await supabase.from("consultants").select("*").limit(1).single()
+      // Fetch consultant info (lấy 1 bản ghi nếu có)
+      const { data: consultantsList } = await supabase.from("consultants").select("*").limit(1)
 
       setLoanPackages(packages || [])
-      setConsultant(consultants)
+      if (consultantsList && consultantsList.length > 0) {
+        setConsultant(consultantsList[0] as Consultant)
+      }
     } catch (error) {
       console.error("Error fetching data:", error)
     } finally {
@@ -91,6 +105,8 @@ export default function AdminDashboard() {
       // Ensure all required fields are present
       const packageData = {
         ...pkg,
+        // Nếu id rỗng, bỏ qua để Supabase tự tạo UUID
+        id: pkg.id && pkg.id !== "" ? pkg.id : undefined,
         register_link: pkg.register_link || "",
         detail_link: pkg.detail_link || "",
       }
@@ -119,9 +135,16 @@ export default function AdminDashboard() {
   }
 
   const handleSaveConsultant = async () => {
-    if (!consultant) return
-
     try {
+      if (!consultant || !consultant.name || consultant.name.trim() === "") {
+        toast({
+          title: "Lỗi",
+          description: "Tên nhân viên là bắt buộc",
+          variant: "destructive",
+        })
+        return
+      }
+
       const payload = {
         id: consultant.id && consultant.id !== "" ? consultant.id : undefined,
         name: (consultant.name || "").trim(),
@@ -130,10 +153,13 @@ export default function AdminDashboard() {
         zalo: (consultant.zalo || "").trim(),
         zalo_link: (consultant.zalo_link || "").trim(),
         facebook: (consultant.facebook || "").trim(),
+        email: (consultant.email || "").trim(),
         credit_cards: (consultant.credit_cards || "").trim(),
         loans: (consultant.loans || "").trim(),
         ewallets: (consultant.ewallets || "").trim(),
       }
+
+      console.log("Saving consultant payload:", payload)
 
       const { data, error } = await supabase
         .from("consultants")
@@ -141,8 +167,15 @@ export default function AdminDashboard() {
         .select("*")
         .single()
 
-      if (error) throw error
-      if (data) setConsultant(data as Consultant)
+      if (error) {
+        console.error("Supabase error details:", error)
+        throw new Error(`Database error: ${error.message} (Code: ${error.code})`)
+      }
+
+      if (data) {
+        setConsultant(data as Consultant)
+        console.log("Successfully saved consultant:", data)
+      }
 
       toast({
         title: "Thành công",
@@ -150,9 +183,10 @@ export default function AdminDashboard() {
       })
     } catch (error) {
       console.error("Error saving consultant:", error)
+      const errorMessage = error instanceof Error ? error.message : "Unknown error"
       toast({
         title: "Lỗi",
-        description: `Không thể lưu thông tin nhân viên tư vấn${error instanceof Error ? ": " + error.message : ""}`,
+        description: `Không thể lưu thông tin nhân viên tư vấn: ${errorMessage}`,
         variant: "destructive",
       })
     }
@@ -404,7 +438,6 @@ export default function AdminDashboard() {
 
           {/* Consultant Management */}
           <TabsContent value="consultant" className="space-y-6">
-            {consultant && (
               <Card>
                 <CardHeader>
                   <CardTitle>Cấu hình nhân viên tư vấn</CardTitle>
@@ -470,6 +503,17 @@ export default function AdminDashboard() {
                   </div>
 
                   <div>
+                    <Label htmlFor="consultant-email">Email</Label>
+                    <Input
+                      id="consultant-email"
+                      type="email"
+                      value={consultant.email}
+                      onChange={(e) => setConsultant({ ...consultant, email: e.target.value })}
+                      placeholder="example@email.com"
+                    />
+                  </div>
+
+                  <div>
                     <Label htmlFor="consultant-credit-cards">Thẻ tín dụng hỗ trợ</Label>
                     <Input
                       id="consultant-credit-cards"
@@ -505,7 +549,6 @@ export default function AdminDashboard() {
                   </Button>
                 </CardContent>
               </Card>
-            )}
           </TabsContent>
 
           {/* Tracking Management */}

@@ -10,8 +10,8 @@ INSERT INTO loan_packages (name, slug, description, loan_limit, interest_rate, d
 ('Thẻ tín dụng HDBank', 'the-hdbank', 'Thẻ tín dụng HDBank với hạn mức linh hoạt và nhiều chương trình khuyến mãi.', 'Tối đa 90.000.000 ₫', 'Từ 2.3%/tháng', 'Trong 4 giờ', '/placeholder.svg?height=40&width=40', '/placeholder.svg?height=150&width=300', 'https://hdbank.com.vn/register', 'https://hdbank.com.vn/details');
 
 -- Insert consultant information
-INSERT INTO consultants (name, avatar, phone, zalo, zalo_link, facebook, credit_cards, loans, ewallets) VALUES
-('Nguyễn Thành Phúc', '/placeholder.svg?height=192&width=192', '0888.979.809', '0888.979.809', 'https://zalo.me/0888979809', 'Tên Facebook hoặc Icon', 'VIB, HDBank, VPBank', 'TNEX, LOTTE, FE Credit', 'MUADEE, Kredivo, MoMo');
+INSERT INTO consultants (name, avatar, phone, zalo, zalo_link, facebook, email, credit_cards, loans, ewallets) VALUES
+('Nguyễn Thành Phúc', '/placeholder.svg?height=192&width=192', '0888.979.809', '0888.979.809', 'https://zalo.me/0888979809', 'Tên Facebook hoặc Icon', 'phuc@example.com', 'VIB, HDBank, VPBank', 'TNEX, LOTTE, FE Credit', 'MUADEE, Kredivo, MoMo');
 
 -- Insert navbar links
 INSERT INTO navbar_links (title, url) VALUES

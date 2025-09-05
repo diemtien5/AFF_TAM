@@ -15,23 +15,23 @@ CREATE TABLE IF NOT EXISTS loan_packages (
 );
 
 -- Add columns if they don't exist (for existing tables)
-DO $$ 
+DO $$
 BEGIN
   -- Add register_link column if it doesn't exist
-  IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns
                  WHERE table_name='loan_packages' AND column_name='register_link') THEN
     ALTER TABLE loan_packages ADD COLUMN register_link TEXT DEFAULT '';
   END IF;
-  
+
   -- Add detail_link column if it doesn't exist
-  IF NOT EXISTS (SELECT 1 FROM information_schema.columns 
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns
                  WHERE table_name='loan_packages' AND column_name='detail_link') THEN
     ALTER TABLE loan_packages ADD COLUMN detail_link TEXT DEFAULT '';
   END IF;
 END $$;
 
 -- Update existing records to have empty strings instead of NULL
-UPDATE loan_packages 
+UPDATE loan_packages
 SET register_link = COALESCE(register_link, ''),
     detail_link = COALESCE(detail_link, '')
 WHERE register_link IS NULL OR detail_link IS NULL;
@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS consultants (
   zalo TEXT,
   zalo_link TEXT,
   facebook TEXT,
+  email TEXT,
   credit_cards TEXT,
   loans TEXT,
   ewallets TEXT,

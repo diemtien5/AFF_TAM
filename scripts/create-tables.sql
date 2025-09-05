@@ -15,12 +15,12 @@ CREATE TABLE IF NOT EXISTS loan_packages (
 );
 
 -- Add new columns to existing loan_packages table (if table already exists)
-DO $$ 
+DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='loan_packages' AND column_name='register_link') THEN
     ALTER TABLE loan_packages ADD COLUMN register_link TEXT;
   END IF;
-  
+
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='loan_packages' AND column_name='detail_link') THEN
     ALTER TABLE loan_packages ADD COLUMN detail_link TEXT;
   END IF;
@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS consultants (
   zalo TEXT,
   zalo_link TEXT,
   facebook TEXT,
+  email TEXT,
   credit_cards TEXT,
   loans TEXT,
   ewallets TEXT,
