@@ -91,7 +91,11 @@ export default function HomePage() {
         .order("created_at", { ascending: true })
 
       // Fetch consultant info
-      const { data: consultants } = await supabase.from("consultants").select("*").limit(1).single()
+      const { data: consultants, error: consultantError } = await supabase.from("consultants").select("*").limit(1).single()
+
+      if (consultantError) {
+        console.error("Error fetching consultant:", consultantError)
+      }
 
       setLoanPackages(packages || [])
       setConsultant(consultants)
@@ -212,7 +216,9 @@ export default function HomePage() {
 
                   {/* Personal Details - with left margin to avoid overlap */}
                   <div className="ml-16 md:ml-20 space-y-2">
-                    <h3 className="text-base md:text-lg font-bold text-slate-800">Nguyễn Thành Phúc</h3>
+                    <h3 className="text-base md:text-lg font-bold text-slate-800">
+                      {consultant?.name || "Nguyễn Thành Phúc"}
+                    </h3>
                     <p className="text-sm text-slate-600 font-medium">Tư vấn tài chính</p>
                     <div className="w-20 md:w-24 h-px bg-slate-300"></div>
                   </div>
@@ -221,18 +227,41 @@ export default function HomePage() {
                 {/* Services */}
                 <div className="space-y-3 md:space-y-4">
                   <div className="space-y-2 md:space-y-3 text-sm text-slate-700">
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span>Thẻ tín dụng: <span className="font-medium">HDBank, VPBank, TPBank, VIB</span></span>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span>Thẻ mua trả góp: <span className="font-medium">Muadee, Kredivo</span></span>
-                    </div>
-                    <div className="flex items-start space-x-2">
-                      <span className="text-green-500 mt-1">•</span>
-                      <span>Vay online: <span className="font-medium">TNEX, CUB, FE, Lotte Finance</span></span>
-                    </div>
+                    {consultant?.credit_cards && (
+                      <div className="flex items-start space-x-2">
+                        <span className="text-green-500 mt-1">•</span>
+                        <span>Thẻ tín dụng: <span className="font-medium">{consultant.credit_cards}</span></span>
+                      </div>
+                    )}
+                    {consultant?.ewallets && (
+                      <div className="flex items-start space-x-2">
+                        <span className="text-green-500 mt-1">•</span>
+                        <span>Thẻ mua trả góp: <span className="font-medium">{consultant.ewallets}</span></span>
+                      </div>
+                    )}
+                    {consultant?.loans && (
+                      <div className="flex items-start space-x-2">
+                        <span className="text-green-500 mt-1">•</span>
+                        <span>Vay online: <span className="font-medium">{consultant.loans}</span></span>
+                      </div>
+                    )}
+                    {/* Fallback nếu không có dữ liệu */}
+                    {!consultant?.credit_cards && !consultant?.ewallets && !consultant?.loans && (
+                      <>
+                        <div className="flex items-start space-x-2">
+                          <span className="text-green-500 mt-1">•</span>
+                          <span>Thẻ tín dụng: <span className="font-medium">HDBank, VPBank, TPBank, VIB</span></span>
+                        </div>
+                        <div className="flex items-start space-x-2">
+                          <span className="text-green-500 mt-1">•</span>
+                          <span>Thẻ mua trả góp: <span className="font-medium">Muadee, Kredivo</span></span>
+                        </div>
+                        <div className="flex items-start space-x-2">
+                          <span className="text-green-500 mt-1">•</span>
+                          <span>Vay online: <span className="font-medium">TNEX, CUB, FE, Lotte Finance</span></span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
@@ -247,13 +276,13 @@ export default function HomePage() {
                       <div className="group">
                         <Button
                           className="w-full sm:w-44 md:w-48 h-11 md:h-12 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 hover:from-emerald-400 hover:via-green-400 hover:to-teal-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
-                          onClick={() => window.open("tel:0888979809", "_self")}
+                          onClick={() => window.open(`tel:${consultant?.phone || "0888979809"}`, "_self")}
                         >
                           <div className="flex items-center justify-center space-x-2">
                             <div className="w-5 h-5 md:w-6 md:h-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
                               <span className="text-sm">📞</span>
                             </div>
-                            <span className="text-sm font-medium">0888.979.809</span>
+                            <span className="text-sm font-medium">{consultant?.phone || "0888.979.809"}</span>
                           </div>
                         </Button>
                       </div>
@@ -262,13 +291,13 @@ export default function HomePage() {
                       <div className="group">
                         <Button
                           className="w-full sm:w-44 md:w-48 h-11 md:h-12 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-400 hover:via-indigo-400 hover:to-purple-400 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out transform hover:scale-105 hover:-translate-y-1"
-                          onClick={() => window.open("https://zalo.me/0888979809", "_blank")}
+                          onClick={() => window.open(consultant?.zalo_link || "https://zalo.me/0888979809", "_blank")}
                         >
                           <div className="flex items-center justify-center space-x-2">
                             <div className="w-5 h-5 md:w-6 md:h-6 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
                               <span className="text-sm">💬</span>
                             </div>
-                            <span className="text-sm font-medium">0888.979.809</span>
+                            <span className="text-sm font-medium">{consultant?.zalo || "0888.979.809"}</span>
                           </div>
                         </Button>
                       </div>
